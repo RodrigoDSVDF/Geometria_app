@@ -1,0 +1,649 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Estudo Ativo: Relações Métricas no Triângulo Retângulo</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col">
+
+    <!-- Header -->
+    <header class="bg-white border-b border-slate-200 sticky top-0 z-50 shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+            <div class="flex items-center space-x-3">
+                <div class="bg-indigo-600 text-white p-2 rounded-lg shadow-md shadow-indigo-200">
+                    <i data-lucide="triangle" class="w-6 h-6 rotate-90"></i>
+                </div>
+                <div>
+                    <h1 class="font-extrabold text-lg text-slate-900 tracking-tight">CurióMetrics</h1>
+                    <p class="text-xs text-slate-500 font-medium">Autodesenvolvimento & Geometria</p>
+                </div>
+            </div>
+            
+            <!-- Botão YouTube no Header + Placar de XP -->
+            <div class="flex items-center space-x-3">
+                <!-- Botão de Atalho para o YouTube -->
+                <a href="https://www.youtube.com/watch?v=nR12SF_erRQ" target="_blank" 
+                   class="flex items-center gap-1.5 bg-rose-600 hover:bg-rose-700 text-white px-3.5 py-2 rounded-full text-xs font-bold transition-all duration-300 shadow-md shadow-rose-100 hover:shadow-rose-200 transform hover:-translate-y-0.5">
+                    <i data-lucide="video" class="w-4 h-4"></i>
+                    <span class="hidden md:inline">Ver Aula no YouTube</span>
+                    <span class="inline md:hidden">Aula</span>
+                </a>
+                
+                <!-- Placar de Progresso Rápido -->
+                <div class="flex items-center space-x-3 bg-slate-100 px-4 py-2 rounded-full text-sm">
+                    <span class="flex items-center text-emerald-600 font-bold gap-1">
+                        <i data-lucide="award" class="w-4 h-4"></i> <span id="header-xp">0</span> XP
+                    </span>
+                    <span class="text-slate-300">|</span>
+                    <span class="text-slate-700 font-semibold text-xs sm:text-sm" id="header-level">Nível 1 (Iniciante)</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content Grid -->
+    <main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 flex flex-col gap-6">
+        
+        <!-- Bloco de Alternância das Abas de Alta Evidência -->
+        <section class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <!-- ABA 1: Laboratório (Super Destaque) -->
+            <button onclick="switchTab('sandbox')" id="tab-sandbox" 
+                class="relative overflow-hidden group p-5 rounded-2xl text-left border-2 border-indigo-600 bg-gradient-to-br from-indigo-600 to-indigo-700 text-white shadow-lg shadow-indigo-100 hover:shadow-indigo-200 transition-all duration-300 transform hover:-translate-y-1">
+                <div class="absolute -right-6 -bottom-6 text-white/10 group-hover:scale-110 transition-transform duration-300">
+                    <i data-lucide="sliders" class="w-28 h-28"></i>
+                </div>
+                <div class="flex items-center justify-between">
+                    <span class="bg-indigo-500/50 text-white text-[10px] font-extrabold px-2.5 py-1 rounded-full uppercase tracking-wider">
+                        Ferramenta Dinâmica
+                    </span>
+                    <span class="flex h-3 w-3 relative" id="sandbox-pulse">
+                        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                        <span class="relative inline-flex rounded-full h-3 w-3 bg-emerald-500"></span>
+                    </span>
+                </div>
+                <h3 class="text-xl font-extrabold mt-3 flex items-center gap-2">
+                    <i data-lucide="sliders" class="w-5 h-5 text-amber-300"></i> 1. Laboratório de Exploração
+                </h3>
+                <p class="text-xs text-indigo-100 mt-1 max-w-md">
+                    Altere os lados do triângulo retângulo em tempo real e veja todas as fórmulas se adaptando imediatamente!
+                </p>
+            </button>
+
+            <!-- ABA 2: Treino Inteligente (Super Destaque) -->
+            <button onclick="switchTab('quiz')" id="tab-quiz" 
+                class="relative overflow-hidden group p-5 rounded-2xl text-left border-2 border-slate-200 bg-white text-slate-800 hover:border-violet-500 transition-all duration-300 transform hover:-translate-y-1">
+                <div class="absolute -right-6 -bottom-6 text-slate-100 group-hover:text-violet-500/10 group-hover:scale-110 transition-transform duration-300">
+                    <i data-lucide="graduation-cap" class="w-28 h-28"></i>
+                </div>
+                <div class="flex items-center justify-between">
+                    <span id="quiz-badge" class="bg-slate-100 text-slate-600 text-[10px] font-extrabold px-2.5 py-1 rounded-full uppercase tracking-wider">
+                        Desafios Reais do Curió
+                    </span>
+                </div>
+                <h3 id="quiz-tab-title" class="text-xl font-extrabold mt-3 flex items-center gap-2 text-slate-900 group-hover:text-violet-600 transition-colors">
+                    <i data-lucide="graduation-cap" class="w-5 h-5 text-violet-500"></i> 2. Treino Inteligente
+                </h3>
+                <p class="text-xs text-slate-500 mt-1 max-w-md">
+                    Resolva os exatos exercícios da aula! Teste seu conhecimento e acumule pontos para subir de nível.
+                </p>
+            </button>
+        </section>
+
+        <!-- Área Central de Conteúdo -->
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+            
+            <!-- Left Sidebar - Menu de Navegação Metacognitiva e Métricas -->
+            <aside class="lg:col-span-3 flex flex-col gap-4">
+                
+                <!-- Cards de Missão Diária de Autodesenvolvimento -->
+                <div class="bg-gradient-to-br from-slate-900 to-indigo-950 text-white p-5 rounded-2xl shadow-sm border border-indigo-950">
+                    <div class="flex items-center gap-2 text-indigo-300 text-xs font-bold uppercase tracking-wider mb-2">
+                        <i data-lucide="compass" class="w-4 h-4"></i> Desafio Ativo
+                    </div>
+                    <h3 class="font-bold text-base mb-2">Aprenda Praticando</h3>
+                    <p class="text-xs text-indigo-100 mb-4 leading-relaxed">Não decore letras, entenda as formas através do movimento de pinça no simulador!</p>
+                    
+                    <div class="space-y-3">
+                        <div class="bg-white/10 p-2.5 rounded-xl flex items-center gap-3">
+                            <input type="checkbox" id="check-interact" disabled class="rounded text-indigo-600 focus:ring-0 bg-transparent border-white/20 w-4 h-4">
+                            <label class="text-xs font-medium text-indigo-200">Mova o triângulo no simulador</label>
+                        </div>
+                        <div class="bg-white/10 p-2.5 rounded-xl flex items-center gap-3">
+                            <input type="checkbox" id="check-answer" disabled class="rounded text-indigo-600 focus:ring-0 bg-transparent border-white/20 w-4 h-4">
+                            <label class="text-xs font-medium text-indigo-200">Acerte uma questão do treino</label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Memorizador de Fórmulas - Os Bizus do Curió -->
+                <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200">
+                    <h3 class="font-bold text-slate-900 mb-3 flex items-center gap-2 text-sm">
+                        <i data-lucide="lightbulb" class="text-amber-500 w-5 h-5"></i>
+                        Os Bizus Rápidos
+                    </h3>
+                    <div class="space-y-3 text-xs">
+                        <div class="p-2.5 rounded-lg bg-indigo-50 border-l-4 border-indigo-500">
+                            <span class="font-bold text-indigo-900">📐 O Tezão (a · h = b · c):</span>
+                            <p class="text-slate-600 mt-0.5">A Hipotenusa vezes a altura é igual à multiplicação dos catetos.</p>
+                        </div>
+                        <div class="p-2.5 rounded-lg bg-emerald-50 border-l-4 border-emerald-500">
+                            <span class="font-bold text-emerald-900">📐 O Tezinho invertido (h² = m · n):</span>
+                            <p class="text-slate-600 mt-0.5">A altura ao quadrado é igual à multiplicação das projeções.</p>
+                        </div>
+                        <div class="p-2.5 rounded-lg bg-amber-50 border-l-4 border-amber-500">
+                            <span class="font-bold text-amber-900">📐 Fazer a Curva (b² = m · a):</span>
+                            <p class="text-slate-600 mt-0.5">O cateto ao quadrado é igual à sua projeção vezes a hipotenusa toda.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Autoavaliação de Confiança -->
+                <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200">
+                    <h3 class="font-bold text-slate-900 mb-2 flex items-center gap-2 text-sm">
+                        <i data-lucide="trending-up" class="text-violet-600 w-5 h-5"></i>
+                        Sua Autoavaliação
+                    </h3>
+                    <p class="text-xs text-slate-500 mb-3">Avalie sinceramente seu domínio atual:</p>
+                    <div class="grid grid-cols-3 gap-2">
+                        <button onclick="setConfidence('Baixo')" class="confidence-btn py-1 px-2 border border-rose-200 text-rose-700 bg-rose-50/50 hover:bg-rose-50 rounded-lg text-xs font-semibold transition">Frágil</button>
+                        <button onclick="setConfidence('Médio')" class="confidence-btn py-1 px-2 border border-amber-200 text-amber-700 bg-amber-50/50 hover:bg-amber-50 rounded-lg text-xs font-semibold transition">OK</button>
+                        <button onclick="setConfidence('Alto')" class="confidence-btn py-1 px-2 border border-emerald-200 text-emerald-700 bg-emerald-50/50 hover:bg-emerald-50 rounded-lg text-xs font-semibold transition">Dominado</button>
+                    </div>
+                    <div class="mt-3 p-2 bg-slate-50 rounded-lg text-[11px] text-slate-600" id="confidence-status">
+                        Confiança declarada: <span class="font-bold text-slate-800">Não definido</span>
+                    </div>
+                </div>
+            </aside>
+
+            <!-- Center Area - Triângulo Dinâmico & Desafios -->
+            <section class="lg:col-span-9 flex flex-col gap-6">
+
+                <!-- ABA 1: SANDBOX / SIMULADOR -->
+                <div id="content-sandbox" class="space-y-6">
+                    <!-- Painel Principal do Simulador -->
+                    <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
+                        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-4">
+                            <div>
+                                <h2 class="text-xl font-bold text-slate-900">Laboratório do Triângulo Retângulo</h2>
+                                <p class="text-sm text-slate-500">Mova o controle deslizante abaixo para mudar os lados e ver as relações se adaptando.</p>
+                            </div>
+                            <div class="bg-indigo-50 border border-indigo-100 text-indigo-700 px-3 py-1.5 rounded-lg text-xs font-semibold">
+                                Pitágoras Confirmado: <span id="pythagoras-check">9² + 12² = 15²</span>
+                            </div>
+                        </div>
+
+                        <!-- Canvas/Desenho do Triângulo Interativo -->
+                        <div class="bg-slate-900 rounded-2xl p-4 flex justify-center items-center relative overflow-hidden animate-fade-in" style="height: 340px;">
+                            <!-- Grade de fundo -->
+                            <div class="absolute inset-0 opacity-5 pointer-events-none bg-[radial-gradient(#e2e8f0_1px,transparent_1px)] [background-size:16px_16px]"></div>
+                            
+                            <!-- SVG do Triângulo Interativo -->
+                            <svg id="triangle-svg" viewBox="0 0 500 300" width="100%" height="100%" class="max-w-[460px]">
+                                <!-- Triângulo Retângulo Principal -->
+                                <polygon id="poly-main" points="50,250 450,250 178,154" fill="rgba(79, 70, 229, 0.15)" stroke="#4f46e5" stroke-width="3" stroke-linejoin="round" />
+                                
+                                <!-- Altura h -->
+                                <line id="line-h" x1="178" y1="154" x2="178" y2="250" stroke="#f59e0b" stroke-width="2.5" stroke-dasharray="4" />
+                                
+                                <!-- Indicadores de Ângulo Reto -->
+                                <path d="M 178 164 L 168 164 L 168 154" fill="none" stroke="#e2e8f0" stroke-width="1.5" />
+                                <circle cx="173" cy="159" r="1.5" fill="#e2e8f0" />
+                                <path d="M 178 240 L 188 240 L 188 250" fill="none" stroke="#e2e8f0" stroke-width="1.5" />
+                                <circle cx="183" cy="245" r="1.5" fill="#e2e8f0" />
+
+                                <!-- Textos -->
+                                <text id="label-b" x="100" y="190" fill="#a5b4fc" font-size="14" font-weight="bold" text-anchor="middle">b = 9</text>
+                                <text id="label-c" x="320" y="190" fill="#a5b4fc" font-size="14" font-weight="bold" text-anchor="middle">c = 12</text>
+                                <text id="label-a" x="250" y="285" fill="#e2e8f0" font-size="14" font-weight="bold" text-anchor="middle">a = 15</text>
+                                <text id="label-h" x="195" y="200" fill="#fbcfe8" font-size="14" font-weight="bold" text-anchor="start">h = 7.2</text>
+                                <text id="label-m" x="110" y="240" fill="#fde68a" font-size="12" font-weight="medium" text-anchor="middle">m = 5.4</text>
+                                <text id="label-n" x="310" y="240" fill="#fde68a" font-size="12" font-weight="medium" text-anchor="middle">n = 9.6</text>
+                            </svg>
+                        </div>
+
+                        <!-- Controle Deslizante Dinâmico -->
+                        <div class="mt-6 p-4 bg-slate-50 rounded-xl border border-slate-200">
+                            <div class="flex justify-between items-center mb-2">
+                                <span class="text-xs font-bold text-slate-700 flex items-center gap-1">
+                                    <i data-lucide="move" class="w-4 h-4 text-indigo-600"></i> Mova para alterar as proporções:
+                                </span>
+                                <span class="text-xs text-indigo-600 font-semibold" id="slider-percentage">Proporção: 36%</span>
+                            </div>
+                            <input type="range" id="triangle-slider" min="15" max="85" value="36" class="w-full h-2 bg-indigo-200 rounded-lg appearance-none cursor-pointer accent-indigo-600 focus:outline-none">
+                        </div>
+                    </div>
+
+                    <!-- Painel de Conferência das Fórmulas em Tempo Real -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200">
+                            <h4 class="font-bold text-slate-900 text-sm mb-3 flex items-center gap-1.5 text-indigo-600">
+                                <i data-lucide="calculator" class="w-4 h-4"></i> Equações Confirmadas Ativas
+                            </h4>
+                            <div class="space-y-2.5 text-xs text-slate-600">
+                                <div class="flex justify-between py-1 border-b border-slate-100">
+                                    <span>O "Tezão" (a · h = b · c)</span>
+                                    <span class="font-mono text-slate-800" id="calc-tezao">15 × 7.2 = 9 × 12 (108 = 108)</span>
+                                </div>
+                                <div class="flex justify-between py-1 border-b border-slate-100">
+                                    <span>O "Tezinho" (h² = m · n)</span>
+                                    <span class="font-mono text-slate-800" id="calc-tezinho">7.2² = 5.4 × 9.6</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200">
+                            <h4 class="font-bold text-slate-900 text-sm mb-3 flex items-center gap-1.5 text-amber-600">
+                                <i data-lucide="refresh-cw" class="w-4 h-4"></i> Curvas (Projeções)
+                            </h4>
+                            <div class="space-y-2.5 text-xs text-slate-600">
+                                <div class="flex justify-between py-1 border-b border-slate-100">
+                                    <span>Curva da Esquerda (b² = a · m)</span>
+                                    <span class="font-mono text-slate-800" id="calc-curva-b">9² = 15 × 5.4</span>
+                                </div>
+                                <div class="flex justify-between py-1 border-b border-slate-100">
+                                    <span>Curva da Direita (c² = a · n)</span>
+                                    <span class="font-mono text-slate-800" id="calc-curva-c">12² = 15 × 9.6</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ABA 2: QUIZ / EXERCÍCIOS -->
+                <div id="content-quiz" class="hidden space-y-6">
+                    <!-- Gerador de Exercícios Interativo -->
+                    <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
+                        <div class="flex justify-between items-center border-b border-slate-100 pb-4 mb-4">
+                            <div>
+                                <span class="text-xs font-bold text-indigo-600 uppercase tracking-widest" id="question-level">Treino do Dia</span>
+                                <h2 class="text-lg font-bold text-slate-900" id="question-title">Carregando Questão...</h2>
+                            </div>
+                            <div class="flex items-center gap-1.5 bg-amber-50 text-amber-700 border border-amber-200 px-3 py-1 rounded-full text-xs font-semibold">
+                                <i data-lucide="zap" class="w-3.5 h-3.5 fill-amber-500"></i> +25 XP por acerto
+                            </div>
+                        </div>
+
+                        <!-- Enunciado do Desafio -->
+                        <div class="bg-slate-900 text-white p-6 rounded-2xl mb-6 relative overflow-hidden border border-slate-800">
+                            <p class="text-sm leading-relaxed mb-4" id="question-statement">
+                                Carregando o enunciado do exercício...
+                            </p>
+                            <!-- Ilustração Básica Dinâmica da Questão -->
+                            <div class="flex justify-center p-3 bg-slate-950 rounded-xl border border-slate-800/80">
+                                <div class="text-xs font-mono text-slate-300 flex gap-4 flex-wrap justify-center">
+                                    <span id="q-val-1">Aguardando dados...</span>
+                                    <span id="q-val-2"></span>
+                                    <span id="q-val-3" class="text-indigo-400"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Alternativas -->
+                        <div class="space-y-3" id="quiz-options">
+                            <!-- Gerado dinamicamente -->
+                        </div>
+
+                        <!-- Feedback Box (Escondido por padrão) -->
+                        <div id="quiz-feedback" class="hidden mt-6 p-4 rounded-xl border flex gap-3 items-start transition-all duration-300 animate-fade-in">
+                            <div id="feedback-icon-container" class="p-2 rounded-lg text-white">
+                                <i data-lucide="check" id="feedback-icon" class="w-5 h-5"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-sm" id="feedback-title">Excelente!</h4>
+                                <p class="text-xs mt-0.5" id="feedback-text">Você acertou usando o bizu correto.</p>
+                                <!-- Resolução detalhada / Botão de Próxima -->
+                                <div class="mt-3 flex flex-col gap-2">
+                                    <p class="text-[11px] leading-relaxed text-slate-600" id="feedback-explanation"></p>
+                                    <button onclick="nextQuestion()" class="mt-2 py-2.5 px-5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg text-xs font-bold self-start transition flex items-center gap-1.5 shadow-md">
+                                        Próximo Treino <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Painel Metacognitivo ao Errar -->
+                    <div class="bg-indigo-50 border border-indigo-100 p-5 rounded-2xl flex items-start gap-4">
+                        <div class="bg-indigo-600 text-white p-2.5 rounded-xl shadow-md">
+                            <i data-lucide="brain-circuit" class="w-5 h-5"></i>
+                        </div>
+                        <div>
+                            <h4 class="font-bold text-indigo-900 text-sm">Método de Erros Progressivos</h4>
+                            <p class="text-xs text-slate-600 mt-1 leading-relaxed">
+                                Ficou em dúvida na matemática das equações? Não se preocupe! Retorne à aba do <strong>Laboratório de Exploração</strong>, ajuste o controle e analise o comportamento visual dos lados e ângulos. A sua intuição espacial ajudará seu cérebro a memorizar a fórmula muito mais rápido do que simplesmente decorando letras.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+            </section>
+        </div>
+
+        <!-- Seção de Direcionamento Nexus e YouTube de Alta Relevância -->
+        <section class="mt-8 bg-gradient-to-r from-indigo-900 via-indigo-950 to-slate-900 text-white p-6 rounded-3xl shadow-xl flex flex-col md:flex-row items-center justify-between gap-6 border border-indigo-950 relative overflow-hidden">
+            <!-- Detalhe decorativo no fundo -->
+            <div class="absolute -right-16 -top-16 w-48 h-48 bg-indigo-500 rounded-full opacity-10 filter blur-2xl"></div>
+            
+            <div class="flex items-center gap-4">
+                <div class="bg-indigo-500/20 text-indigo-300 p-3.5 rounded-2xl border border-indigo-500/30 hidden sm:block">
+                    <i data-lucide="sparkles" class="w-6 h-6"></i>
+                </div>
+                <div>
+                    <h3 class="text-lg font-extrabold tracking-tight">Deseja fixar o conteúdo ainda melhor?</h3>
+                    <p class="text-xs text-indigo-200 mt-1 max-w-lg leading-relaxed">
+                        Assista à aula oficial do Professor Curió no YouTube para complementar os seus estudos ativos ou acesse o Manual Nexus para expandir o seu aprendizado!
+                    </p>
+                </div>
+            </div>
+            
+            <div class="flex flex-col sm:flex-row gap-3 w-full md:w-auto">
+                <!-- Botão Aula Oficial -->
+                <a href="https://www.youtube.com/watch?v=nR12SF_erRQ" target="_blank" 
+                    class="w-full md:w-auto bg-rose-600 hover:bg-rose-500 text-white px-6 py-3.5 rounded-xl font-extrabold text-sm text-center shadow-lg hover:shadow-rose-950/20 transition-all duration-300 flex items-center justify-center gap-2 transform hover:-translate-y-0.5">
+                    <i data-lucide="video" class="w-4 h-4"></i> Assistir no YouTube
+                </a>
+                
+                <!-- Botão Manual Nexus -->
+                <a href="https://manual-nexus.com.br" target="_blank" 
+                    class="w-full md:w-auto bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-slate-950 px-6 py-3.5 rounded-xl font-extrabold text-sm text-center shadow-lg hover:shadow-emerald-950/20 transition-all duration-300 flex items-center justify-center gap-2 transform hover:-translate-y-0.5">
+                    Acesse Manual Nexus <i data-lucide="external-link" class="w-4 h-4"></i>
+                </a>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-white border-t border-slate-200 mt-12 py-6 text-center text-xs text-slate-500">
+        <p>© 2026 CurióMetrics - Desenvolvido para Autodesenvolvimento de Habilidades Matemáticas.</p>
+    </footer>
+
+    <!-- Aplicação de Logica em JS -->
+    <script>
+        // Inicialização de Estado Global
+        let xp = 0;
+        let currentTab = 'sandbox';
+        let currentLevel = 1;
+        let selectedConfidence = null;
+
+        // Banco de Questões Inteligentes Baseadas nos Treinos das Imagens
+        const questionBank = [
+            {
+                level: 1,
+                title: "Treino 1 (O Triângulo Perfeito)",
+                statement: "Dado um triângulo retângulo com catetos b = 8 e c = 6, faça a análise métrica para encontrar a medida das projeções m, n e da altura H correspondente.",
+                options: [
+                    "m = 6.4, n = 3.6 e H = 4.8",
+                    "m = 5.0, n = 5.0 e H = 4.0",
+                    "m = 6.0, n = 4.0 e H = 5.0",
+                    "m = 7.0, n = 3.0 e H = 4.5"
+                ],
+                correct: 0,
+                hint: "m = 6.4, n = 3.6, H = 4.8",
+                formula: "Hipotenusa a = √(8² + 6²) = 10. Curvas: b² = a · m => 64 = 10m => m = 6.4. c² = a · n => 36 = 10n => n = 3.6. Tezinho: H² = m · n => H = 4.8.",
+                explanation: "Exatamente! Primeiro descobrimos a hipotenusa toda aplicando Pitágoras (a = 10). Em seguida, aplicando o bizu das Curvas encontramos as projeções: b² = a·m (8² = 10·m => m = 6,4) e c² = a·n (6² = 10·n => n = 3,6). Por fim, pelo Tezinho de cabeça para baixo: H² = 6,4 × 3,6 = 23,04 => H = 4,8.",
+                labels: ["Catetos: 8 e 6", "Hipotenusa: 10", "Achar: m, n, H"]
+            },
+            {
+                level: 2,
+                title: "Treino 2 (Pitágoras & Produtos Notáveis)",
+                statement: "Analise o triângulo retângulo com os lados expressos por: catetos medindo x e x - 4, e hipotenusa medindo x + 4. Qual é o perímetro total deste triângulo?",
+                options: [
+                    "Perímetro = 36 cm",
+                    "Perímetro = 48 cm",
+                    "Perímetro = 24 cm",
+                    "Perímetro = 60 cm"
+                ],
+                correct: 1,
+                hint: "Perímetro = 48 cm",
+                formula: "(x + 4)² = (x - 4)² + x² => x² - 16x = 0 => x = 16. Lados: 12, 16 e 20. Soma = 48.",
+                explanation: "Espetacular! Aplicando Pitágoras: (x + 4)² = x² + (x - 4)². Desenvolvendo os produtos notáveis: x² + 8x + 16 = x² + x² - 8x + 16. Simplificando tudo, temos x² - 16x = 0, logo x = 16. Substituindo os lados temos: 12, 16 e 20. O perímetro total é a soma: 12 + 16 + 20 = 48 cm.",
+                labels: ["Catetos: x e x-4", "Hipotenusa: x+4", "Achar: Perímetro"]
+            },
+            {
+                level: 3,
+                title: "Treino 3 (Desafio do Círculo Inscrito)",
+                statement: "Um triângulo retângulo está inscrito em uma circunferência de forma que sua hipotenusa coincide com o diâmetro. Se a altura do triângulo mede 6 e uma de suas projeções sobre o diâmetro mede 3, qual é a medida do raio R deste círculo?",
+                options: [
+                    "Raio R = 6.0",
+                    "Raio R = 7.5",
+                    "Raio R = 8.0",
+                    "Raio R = 9.5"
+                ],
+                correct: 1,
+                hint: "Raio R = 7.5",
+                formula: "h² = m · n => 6² = 3 · (2R - 3) => 36 = 6R - 9 => R = 7.5.",
+                explanation: "Excelente! Como a hipotenusa é o diâmetro, ela mede 2R. Uma projeção mede 3, logo a outra projeção mede 2R - 3. Aplicando o Tezinho de ponta-cabeça: h² = m · n => 6² = 3 · (2R - 3) => 36 = 6R - 9 => 45 = 6R => R = 7,5.",
+                labels: ["Altura h = 6", "Projeção m = 3", "Achar: Raio R"]
+            }
+        ];
+
+        let currentQuestionIndex = 0;
+
+        // Atualizador de Valores do Triângulo Dinâmico (Sandbox)
+        const slider = document.getElementById('triangle-slider');
+        const polyMain = document.getElementById('poly-main');
+        const lineH = document.getElementById('line-h');
+        
+        const labelB = document.getElementById('label-b');
+        const labelC = document.getElementById('label-c');
+        const labelA = document.getElementById('label-a');
+        const labelH = document.getElementById('label-h');
+        const labelM = document.getElementById('label-m');
+        const labelN = document.getElementById('label-n');
+
+        const calcTezao = document.getElementById('calc-tezao');
+        const calcTezinho = document.getElementById('calc-tezinho');
+        const calcCurvaB = document.getElementById('calc-curva-b');
+        const calcCurvaC = document.getElementById('calc-curva-c');
+        const pythCheck = document.getElementById('pythagoras-check');
+
+        function updateTriangle(sliderVal) {
+            const totalWidth = 400; 
+            const startX = 50;
+            const endX = 450;
+            const yBase = 250;
+
+            const sliderRatio = sliderVal / 100;
+            const splitX = startX + (totalWidth * sliderRatio); 
+
+            const m = splitX - startX;
+            const n = endX - splitX;
+            const h = Math.sqrt(m * n);
+            const yTop = yBase - h;
+
+            polyMain.setAttribute('points', `${startX},${yBase} ${endX},${yBase} ${splitX},${yTop}`);
+            
+            lineH.setAttribute('x1', splitX);
+            lineH.setAttribute('y1', yTop);
+            lineH.setAttribute('x2', splitX);
+            lineH.setAttribute('y2', yBase);
+
+            const scaleA = 15;
+            const scaleM = (m / totalWidth) * scaleA;
+            const scaleN = (n / totalWidth) * scaleA;
+            const scaleH = Math.sqrt(scaleM * scaleN);
+            const scaleB = Math.sqrt(scaleM * scaleA);
+            const scaleC = Math.sqrt(scaleN * scaleA);
+
+            labelB.textContent = `b = ${scaleB.toFixed(1)}`;
+            labelC.textContent = `c = ${scaleC.toFixed(1)}`;
+            labelA.textContent = `a = ${scaleA.toFixed(0)}`;
+            labelH.textContent = `h = ${scaleH.toFixed(1)}`;
+            labelM.textContent = `m = ${scaleM.toFixed(1)}`;
+            labelN.textContent = `n = ${scaleN.toFixed(1)}`;
+
+            labelB.setAttribute('x', `${startX + m/2 - 10}`);
+            labelB.setAttribute('y', `${yTop + h/2 + 10}`);
+            labelC.setAttribute('x', `${splitX + n/2 + 15}`);
+            labelC.setAttribute('y', `${yTop + h/2 + 10}`);
+            labelH.setAttribute('x', `${splitX + 10}`);
+            labelH.setAttribute('y', `${yTop + h/2}`);
+            labelM.setAttribute('x', `${startX + m/2}`);
+            labelN.setAttribute('x', `${splitX + n/2}`);
+
+            pythCheck.textContent = `${scaleB.toFixed(1)}² + ${scaleC.toFixed(1)}² = ${scaleA}²`;
+            
+            calcTezao.innerHTML = `${scaleA} × ${scaleH.toFixed(1)} = ${scaleB.toFixed(1)} × ${scaleC.toFixed(1)} <br class="sm:hidden" /> <span class="text-indigo-600 font-semibold">(${(scaleA * scaleH).toFixed(1)} = ${(scaleB * scaleC).toFixed(1)})</span>`;
+            calcTezinho.innerHTML = `${scaleH.toFixed(1)}² = ${scaleM.toFixed(1)} × ${scaleN.toFixed(1)} <br class="sm:hidden" /> <span class="text-indigo-600 font-semibold">(${(scaleH * scaleH).toFixed(1)} = ${(scaleM * scaleN).toFixed(1)})</span>`;
+            calcCurvaB.innerHTML = `${scaleB.toFixed(1)}² = ${scaleA} × ${scaleM.toFixed(1)} <br class="sm:hidden" /> <span class="text-indigo-600 font-semibold">(${(scaleB * scaleB).toFixed(1)} = ${(scaleA * scaleM).toFixed(1)})</span>`;
+            calcCurvaC.innerHTML = `${scaleC.toFixed(1)}² = ${scaleA} × ${scaleN.toFixed(1)} <br class="sm:hidden" /> <span class="text-indigo-600 font-semibold">(${(scaleC * scaleC).toFixed(1)} = ${(scaleA * scaleN).toFixed(1)})</span>`;
+
+            document.getElementById('check-interact').checked = true;
+            document.getElementById('slider-percentage').textContent = `Proporção m/n: ${Math.round(sliderVal)}%`;
+        }
+
+        slider.addEventListener('input', (e) => {
+            updateTriangle(e.target.value);
+        });
+
+        // Alternador de Abas de Alta Evidência
+        function switchTab(tab) {
+            currentTab = tab;
+            const btnSandbox = document.getElementById('tab-sandbox');
+            const btnQuiz = document.getElementById('tab-quiz');
+            const contentSandbox = document.getElementById('content-sandbox');
+            const contentQuiz = document.getElementById('content-quiz');
+            const sandboxPulse = document.getElementById('sandbox-pulse');
+            const quizBadge = document.getElementById('quiz-badge');
+
+            if (tab === 'sandbox') {
+                // Ativa Sandbox
+                btnSandbox.className = "relative overflow-hidden group p-5 rounded-2xl text-left border-2 border-indigo-600 bg-gradient-to-br from-indigo-600 to-indigo-700 text-white shadow-lg shadow-indigo-100 hover:shadow-indigo-200 transition-all duration-300 transform hover:-translate-y-1";
+                btnQuiz.className = "relative overflow-hidden group p-5 rounded-2xl text-left border-2 border-slate-200 bg-white text-slate-800 hover:border-violet-500 transition-all duration-300 transform hover:-translate-y-1";
+                contentSandbox.classList.remove('hidden');
+                contentQuiz.classList.add('hidden');
+                sandboxPulse.classList.remove('hidden');
+                quizBadge.className = "bg-slate-100 text-slate-600 text-[10px] font-extrabold px-2.5 py-1 rounded-full uppercase tracking-wider";
+            } else {
+                // Ativa Quiz
+                btnQuiz.className = "relative overflow-hidden group p-5 rounded-2xl text-left border-2 border-violet-600 bg-gradient-to-br from-violet-600 to-violet-700 text-white shadow-lg shadow-violet-100 hover:shadow-violet-200 transition-all duration-300 transform hover:-translate-y-1";
+                btnSandbox.className = "relative overflow-hidden group p-5 rounded-2xl text-left border-2 border-slate-200 bg-white text-slate-800 hover:border-indigo-500 transition-all duration-300 transform hover:-translate-y-1";
+                contentSandbox.classList.add('hidden');
+                contentQuiz.classList.remove('hidden');
+                sandboxPulse.classList.add('hidden');
+                quizBadge.className = "bg-violet-500/50 text-white text-[10px] font-extrabold px-2.5 py-1 rounded-full uppercase tracking-wider";
+                loadQuestion();
+            }
+        }
+
+        // Lógica de Autodesenvolvimento e Quiz
+        function loadQuestion() {
+            const q = questionBank[currentQuestionIndex];
+            document.getElementById('question-level').textContent = q.title;
+            document.getElementById('question-title').textContent = "Bizu do Curió em Ação";
+            document.getElementById('question-statement').textContent = q.statement;
+            
+            document.getElementById('q-val-1').textContent = `Dados do Problema: ${q.labels[0]}`;
+            document.getElementById('q-val-2').textContent = `Auxiliar: ${q.labels[1]}`;
+            document.getElementById('q-val-3').textContent = `Achar: ${q.labels[2]}`;
+
+            const optionsContainer = document.getElementById('quiz-options');
+            optionsContainer.innerHTML = '';
+            
+            q.options.forEach((opt, idx) => {
+                const button = document.createElement('button');
+                button.className = "w-full text-left p-4 rounded-xl border border-slate-200 hover:bg-violet-50/50 hover:border-violet-200 transition font-semibold text-sm flex items-center justify-between bg-white text-slate-700 shadow-sm";
+                button.onclick = () => selectOption(idx);
+                button.innerHTML = `
+                    <span>${opt}</span>
+                    <span class="w-6 h-6 rounded-full border border-slate-300 flex items-center justify-center text-xs font-bold text-slate-400 group-hover:border-indigo-400">
+                        ${String.fromCharCode(65 + idx)}
+                    </span>
+                `;
+                optionsContainer.appendChild(button);
+            });
+
+            document.getElementById('quiz-feedback').classList.add('hidden');
+        }
+
+        function selectOption(idx) {
+            const q = questionBank[currentQuestionIndex];
+            const feedbackBox = document.getElementById('quiz-feedback');
+            const feedbackIconContainer = document.getElementById('feedback-icon-container');
+            const feedbackIcon = document.getElementById('feedback-icon');
+            const feedbackTitle = document.getElementById('feedback-title');
+            const feedbackText = document.getElementById('feedback-text');
+            const feedbackExplanation = document.getElementById('feedback-explanation');
+
+            feedbackBox.classList.remove('hidden');
+            
+            if (idx === q.correct) {
+                feedbackBox.className = "mt-6 p-5 rounded-2xl border border-emerald-200 bg-emerald-50/70 flex gap-3 items-start transition-all duration-300";
+                feedbackIconContainer.className = "p-2.5 rounded-xl bg-emerald-600 text-white shadow-md shadow-emerald-200";
+                feedbackIcon.setAttribute('data-lucide', 'check');
+                feedbackTitle.textContent = "Incrível! Resposta Exata!";
+                feedbackText.textContent = "Você compreendeu a geometria ativa por trás do problema perfeitamente.";
+                feedbackExplanation.innerHTML = `<strong>Demonstração passo a passo:</strong> <code class="bg-emerald-100/80 px-1.5 py-0.5 rounded font-mono text-emerald-950">${q.formula}</code><br><br>${q.explanation}`;
+                
+                xp += 25;
+                updateXPDisplay();
+                
+                document.getElementById('check-answer').checked = true;
+            } else {
+                feedbackBox.className = "mt-6 p-5 rounded-2xl border border-rose-200 bg-rose-50/70 flex gap-3 items-start transition-all duration-300";
+                feedbackIconContainer.className = "p-2.5 rounded-xl bg-rose-600 text-white shadow-md shadow-rose-200";
+                feedbackIcon.setAttribute('data-lucide', 'alert-circle');
+                feedbackTitle.textContent = "Houve um detalhe na conta!";
+                feedbackText.textContent = "Mas errar é parte crucial do aprendizado ativo! Veja a dica abaixo.";
+                feedbackExplanation.innerHTML = `<strong>Dica do Professor:</strong> ${q.hint}.<br>Pressione avançar para reiniciar ou tente simular proporções semelhantes com os controles na aba anterior.`;
+            }
+            lucide.createIcons();
+        }
+
+        function nextQuestion() {
+            currentQuestionIndex = (currentQuestionIndex + 1) % questionBank.length;
+            loadQuestion();
+        }
+
+        function updateXPDisplay() {
+            document.getElementById('header-xp').textContent = xp;
+            if (xp >= 75) {
+                currentLevel = 4;
+                document.getElementById('header-level').textContent = "Nível 4 (Mestre Curió)";
+            } else if (xp >= 50) {
+                currentLevel = 3;
+                document.getElementById('header-level').textContent = "Nível 3 (Intermediário)";
+            } else if (xp >= 25) {
+                currentLevel = 2;
+                document.getElementById('header-level').textContent = "Nível 2 (Iniciado)";
+            }
+        }
+
+        function setConfidence(level) {
+            selectedConfidence = level;
+            const status = document.getElementById('confidence-status');
+            const buttons = document.querySelectorAll('.confidence-btn');
+            
+            buttons.forEach(btn => {
+                btn.classList.remove('ring-2', 'ring-offset-2', 'ring-indigo-600');
+            });
+
+            if (level === 'Baixo') {
+                status.innerHTML = `Confiança: <span class="font-bold text-rose-600">Frágil</span>. Sugerimos explorar mais o Laboratório Dinâmico.`;
+            } else if (level === 'Médio') {
+                status.innerHTML = `Confiança: <span class="font-bold text-amber-600">OK</span>. Você está no caminho certo para o domínio!`;
+            } else {
+                status.innerHTML = `Confiança: <span class="font-bold text-emerald-600">Dominado</span>. Excelente dedicação ativa!`;
+            }
+        }
+
+        // Inicialização
+        window.onload = function() {
+            lucide.createIcons();
+            updateTriangle(36);
+        };
+    </script>
+</body>
+</html>
