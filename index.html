@@ -1,0 +1,780 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CurióMetrics | Pitágoras & Geometria Euclidiana</title>
+    <script src="https://cdn.tailwindcss.com">
+    </script>
+    <script src="https://unpkg.com/lucide@latest">
+    </script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+        .module-btn {
+            transition: all 0.3s ease;
+        }
+        .module-btn.active {
+            background-color: #4f46e5;
+            color: white;
+            box-shadow: 0 4px 6px -1px rgba(79, 70, 229, 0.2);
+        }
+        .module-btn.locked {
+            opacity: 0.4;
+            pointer-events: none;
+            background-color: #e2e8f0;
+            color: #94a3b8;
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col">
+
+    <!-- Header -->
+    <header class="bg-white border-b border-slate-200 sticky top-0 z-50 shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+            <div class="flex items-center space-x-3">
+                <div class="bg-indigo-600 text-white p-2 rounded-lg shadow-md shadow-indigo-200">
+                    <i data-lucide="triangle" class="w-6 h-6 rotate-90"></i>
+                </div>
+                <div>
+                    <h1 class="font-extrabold text-lg text-slate-900 tracking-tight">CurióMetrics</h1>
+                    <p class="text-xs text-slate-500 font-medium">Autodesenvolvimento & Geometria</p>
+                </div>
+            </div>
+            <div class="flex items-center space-x-3">
+                <a href="https://www.youtube.com/watch?v=nR12SF_erRQ" target="_blank"
+                class="flex items-center gap-1.5 bg-rose-600 hover:bg-rose-700 text-white px-3.5 py-2 rounded-full text-xs font-bold transition-all duration-300 shadow-md shadow-rose-100 hover:shadow-rose-200 transform hover:-translate-y-0.5">
+                <i data-lucide="video" class="w-4 h-4"></i>
+                <span class="hidden md:inline">Ver Aula no YouTube</span>
+                <span class="inline md:hidden">Aula</span>
+            </a>
+            <div class="flex items-center space-x-3 bg-slate-100 px-4 py-2 rounded-full text-sm">
+                <span class="flex items-center text-emerald-600 font-bold gap-1">
+                    <i data-lucide="award" class="w-4 h-4"></i> <span id="header-xp">0</span> XP
+                </span>
+                <span class="text-slate-300">|</span>
+                <span class="text-slate-700 font-semibold text-xs sm:text-sm" id="header-level">Nível 1 (Iniciante)</span>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- Navegação de Módulos -->
+<nav class="bg-white border-b border-slate-200 sticky top-16 z-40 shadow-sm">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex overflow-x-auto gap-2 py-2" id="module-nav">
+        <button onclick="switchModule(1)" class="module-btn active px-3 py-1.5 rounded-full text-xs font-bold whitespace-nowrap" data-module="1">🔬 Laboratório</button>
+        <button onclick="switchModule(2)" class="module-btn px-3 py-1.5 rounded-full text-xs font-bold whitespace-nowrap" data-module="2">🧠 Treino</button>
+        <button onclick="switchModule(3)" class="module-btn locked px-3 py-1.5 rounded-full text-xs font-bold whitespace-nowrap" data-module="3">📐 Semelhança</button>
+        <button onclick="switchModule(4)" class="module-btn locked px-3 py-1.5 rounded-full text-xs font-bold whitespace-nowrap" data-module="4">📏 Trigonometria</button>
+        <button onclick="switchModule(5)" class="module-btn locked px-3 py-1.5 rounded-full text-xs font-bold whitespace-nowrap" data-module="5">🔢 Ternos</button>
+        <button onclick="switchModule(6)" class="module-btn locked px-3 py-1.5 rounded-full text-xs font-bold whitespace-nowrap" data-module="6">📈 Lei dos Cossenos</button>
+        <button onclick="switchModule(7)" class="module-btn locked px-3 py-1.5 rounded-full text-xs font-bold whitespace-nowrap" data-module="7">✨ Demonstrações</button>
+    </div>
+</nav>
+
+<main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 flex flex-col gap-6">
+
+    <!-- ==================== MÓDULO 1: LABORATÓRIO ==================== -->
+    <div id="module-1" class="module-content">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+            <aside class="lg:col-span-3 flex flex-col gap-4">
+                <div class="bg-gradient-to-br from-slate-900 to-indigo-950 text-white p-5 rounded-2xl shadow-sm border border-indigo-950">
+                    <div class="flex items-center gap-2 text-indigo-300 text-xs font-bold uppercase tracking-wider mb-2">
+                        <i data-lucide="compass" class="w-4 h-4"></i> Desafio Ativo
+                    </div>
+                    <h3 class="font-bold text-base mb-2">Aprenda Praticando</h3>
+                    <p class="text-xs text-indigo-100 mb-4 leading-relaxed">Não decore letras, entenda as formas através do movimento de pinça no simulador!</p>
+                    <div class="space-y-3">
+                        <div class="bg-white/10 p-2.5 rounded-xl flex items-center gap-3">
+                            <input type="checkbox" id="check-interact" disabled class="rounded text-indigo-600 focus:ring-0 bg-transparent border-white/20 w-4 h-4">
+                            <label class="text-xs font-medium text-indigo-200">Mova o triângulo no simulador</label>
+                        </div>
+                        <div class="bg-white/10 p-2.5 rounded-xl flex items-center gap-3">
+                            <input type="checkbox" id="check-answer" disabled class="rounded text-indigo-600 focus:ring-0 bg-transparent border-white/20 w-4 h-4">
+                            <label class="text-xs font-medium text-indigo-200">Acerte uma questão do treino</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200">
+                    <h3 class="font-bold text-slate-900 mb-3 flex items-center gap-2 text-sm">
+                        <i data-lucide="lightbulb" class="text-amber-500 w-5 h-5"></i> Os Bizus Rápidos
+                    </h3>
+                    <div class="space-y-3 text-xs">
+                        <div class="p-2.5 rounded-lg bg-indigo-50 border-l-4 border-indigo-500">
+                            <span class="font-bold text-indigo-900">📐 O Tezão (a·h = b·c):</span>
+                            <p class="text-slate-600 mt-0.5">Hipotenusa × altura = multiplicação dos catetos.</p>
+                        </div>
+                        <div class="p-2.5 rounded-lg bg-emerald-50 border-l-4 border-emerald-500">
+                            <span class="font-bold text-emerald-900">📐 O Tezinho (h² = m·n):</span>
+                            <p class="text-slate-600 mt-0.5">Altura ao quadrado = multiplicação das projeções.</p>
+                        </div>
+                        <div class="p-2.5 rounded-lg bg-amber-50 border-l-4 border-amber-500">
+                            <span class="font-bold text-amber-900">📐 Curva (b² = a·m):</span>
+                            <p class="text-slate-600 mt-0.5">Cateto ao quadrado = sua projeção × hipotenusa.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200">
+                    <h3 class="font-bold text-slate-900 mb-2 flex items-center gap-2 text-sm">
+                        <i data-lucide="trending-up" class="text-violet-600 w-5 h-5"></i> Sua Autoavaliação
+                    </h3>
+                    <p class="text-xs text-slate-500 mb-3">Avalie sinceramente seu domínio atual:</p>
+                    <div class="grid grid-cols-3 gap-2">
+                        <button onclick="setConfidence('Baixo')" class="confidence-btn py-1 px-2 border border-rose-200 text-rose-700 bg-rose-50/50 hover:bg-rose-50 rounded-lg text-xs font-semibold transition">Frágil</button>
+                        <button onclick="setConfidence('Médio')" class="confidence-btn py-1 px-2 border border-amber-200 text-amber-700 bg-amber-50/50 hover:bg-amber-50 rounded-lg text-xs font-semibold transition">OK</button>
+                        <button onclick="setConfidence('Alto')" class="confidence-btn py-1 px-2 border border-emerald-200 text-emerald-700 bg-emerald-50/50 hover:bg-emerald-50 rounded-lg text-xs font-semibold transition">Dominado</button>
+                    </div>
+                    <div class="mt-3 p-2 bg-slate-50 rounded-lg text-[11px] text-slate-600" id="confidence-status">
+                        Confiança declarada: <span class="font-bold text-slate-800">Não definido</span>
+                    </div>
+                </div>
+            </aside>
+
+            <section class="lg:col-span-9 flex flex-col gap-6">
+                <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
+                    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-4">
+                        <div>
+                            <h2 class="text-xl font-bold text-slate-900">Laboratório do Triângulo Retângulo</h2>
+                            <p class="text-sm text-slate-500">Mova o controle deslizante para alterar os lados e ver as relações se adaptando.</p>
+                        </div>
+                        <div class="bg-indigo-50 border border-indigo-100 text-indigo-700 px-3 py-1.5 rounded-lg text-xs font-semibold">
+                            Pitágoras Confirmado: <span id="pythagoras-check">9² + 12² = 15²</span>
+                        </div>
+                    </div>
+                    <div class="bg-slate-900 rounded-2xl p-4 flex justify-center items-center relative overflow-hidden" style="height: 340px;">
+                        <div class="absolute inset-0 opacity-5 pointer-events-none bg-[radial-gradient(#e2e8f0_1px,transparent_1px)] [background-size:16px_16px]"></div>
+                        <svg id="triangle-svg" viewBox="0 0 500 300" width="100%" height="100%" class="max-w-[460px]">
+                            <polygon id="poly-main" points="50,250 450,250 178,154" fill="rgba(79, 70, 229, 0.15)" stroke="#4f46e5" stroke-width="3" stroke-linejoin="round" />
+                            <line id="line-h" x1="178" y1="154" x2="178" y2="250" stroke="#f59e0b" stroke-width="2.5" stroke-dasharray="4" />
+                            <path d="M 178 164 L 168 164 L 168 154" fill="none" stroke="#e2e8f0" stroke-width="1.5" />
+                            <circle cx="173" cy="159" r="1.5" fill="#e2e8f0" />
+                            <path d="M 178 240 L 188 240 L 188 250" fill="none" stroke="#e2e8f0" stroke-width="1.5" />
+                            <circle cx="183" cy="245" r="1.5" fill="#e2e8f0" />
+                            <text id="label-b" x="100" y="190" fill="#a5b4fc" font-size="14" font-weight="bold" text-anchor="middle">b = 9</text>
+                            <text id="label-c" x="320" y="190" fill="#a5b4fc" font-size="14" font-weight="bold" text-anchor="middle">c = 12</text>
+                            <text id="label-a" x="250" y="285" fill="#e2e8f0" font-size="14" font-weight="bold" text-anchor="middle">a = 15</text>
+                            <text id="label-h" x="195" y="200" fill="#fbcfe8" font-size="14" font-weight="bold" text-anchor="start">h = 7.2</text>
+                            <text id="label-m" x="110" y="240" fill="#fde68a" font-size="12" font-weight="medium" text-anchor="middle">m = 5.4</text>
+                            <text id="label-n" x="310" y="240" fill="#fde68a" font-size="12" font-weight="medium" text-anchor="middle">n = 9.6</text>
+                        </svg>
+                    </div>
+                    <div class="mt-6 p-4 bg-slate-50 rounded-xl border border-slate-200">
+                        <div class="flex justify-between items-center mb-2">
+                            <span class="text-xs font-bold text-slate-700 flex items-center gap-1">
+                                <i data-lucide="move" class="w-4 h-4 text-indigo-600"></i> Mova para alterar as proporções:
+                            </span>
+                            <span class="text-xs text-indigo-600 font-semibold" id="slider-percentage">Proporção: 36%</span>
+                        </div>
+                        <input type="range" id="triangle-slider" min="15" max="85" value="36" class="w-full h-2 bg-indigo-200 rounded-lg appearance-none cursor-pointer accent-indigo-600 focus:outline-none">
+                    </div>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200">
+                        <h4 class="font-bold text-slate-900 text-sm mb-3 flex items-center gap-1.5 text-indigo-600">
+                            <i data-lucide="calculator" class="w-4 h-4"></i> Equações Ativas
+                        </h4>
+                        <div class="space-y-2.5 text-xs text-slate-600">
+                            <div class="flex justify-between py-1 border-b border-slate-100">
+                                <span>Tezão (a·h = b·c)</span>
+                                <span class="font-mono text-slate-800" id="calc-tezao">15 × 7.2 = 9 × 12</span>
+                            </div>
+                            <div class="flex justify-between py-1 border-b border-slate-100">
+                                <span>Tezinho (h² = m·n)</span>
+                                <span class="font-mono text-slate-800" id="calc-tezinho">7.2² = 5.4 × 9.6</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200">
+                        <h4 class="font-bold text-slate-900 text-sm mb-3 flex items-center gap-1.5 text-amber-600">
+                            <i data-lucide="refresh-cw" class="w-4 h-4"></i> Curvas (Projeções)
+                        </h4>
+                        <div class="space-y-2.5 text-xs text-slate-600">
+                            <div class="flex justify-between py-1 border-b border-slate-100">
+                                <span>b² = a·m</span>
+                                <span class="font-mono text-slate-800" id="calc-curva-b">9² = 15 × 5.4</span>
+                            </div>
+                            <div class="flex justify-between py-1 border-b border-slate-100">
+                                <span>c² = a·n</span>
+                                <span class="font-mono text-slate-800" id="calc-curva-c">12² = 15 × 9.6</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+
+    <!-- ==================== MÓDULO 2: TREINO (QUIZ PRINCIPAL) ==================== -->
+    <div id="module-2" class="module-content hidden">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+            <aside class="lg:col-span-3 flex flex-col gap-4">
+                <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200">
+                    <h3 class="font-bold text-slate-900 mb-3 text-sm">Progresso no Módulo 2</h3>
+                    <p class="text-xs text-slate-500" id="module-2-progress">Questões respondidas: 0</p>
+                    <div class="mt-2 bg-slate-100 h-2 rounded-full">
+                        <div id="module-2-progress-bar" class="bg-indigo-600 h-2 rounded-full transition-all" style="width: 0%"></div>
+                    </div>
+                </div>
+            </aside>
+            <section class="lg:col-span-9">
+                <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
+                    <div class="flex justify-between items-center border-b border-slate-100 pb-4 mb-4">
+                        <div>
+                            <span class="text-xs font-bold text-indigo-600 uppercase tracking-widest" id="mod2-question-level">Treino do Dia</span>
+                            <h2 class="text-lg font-bold text-slate-900" id="mod2-question-title">Carregando...</h2>
+                            <p class="text-xs text-slate-400 mt-1" id="mod2-question-counter"></p>
+                        </div>
+                        <div class="flex items-center gap-1.5 bg-amber-50 text-amber-700 border border-amber-200 px-3 py-1 rounded-full text-xs font-semibold">
+                            <i data-lucide="zap" class="w-3.5 h-3.5 fill-amber-500"></i> +25 XP
+                        </div>
+                    </div>
+                    <div class="bg-slate-900 text-white p-6 rounded-2xl mb-6 relative overflow-hidden border border-slate-800">
+                        <p class="text-sm leading-relaxed mb-4" id="mod2-question-statement"></p>
+                        <div class="flex justify-center p-3 bg-slate-950 rounded-xl border border-slate-800/80">
+                            <div class="text-xs font-mono text-slate-300 flex gap-4 flex-wrap justify-center">
+                                <span id="mod2-q-val-1"></span> <span id="mod2-q-val-2"></span> <span id="mod2-q-val-3" class="text-indigo-400"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="space-y-3" id="mod2-quiz-options"></div>
+                    <div id="mod2-quiz-feedback" class="hidden mt-6 p-4 rounded-xl border flex gap-3 items-start"></div>
+                </div>
+            </section>
+        </div>
+    </div>
+
+    <!-- ==================== MÓDULO 3: SEMELHANÇA ==================== -->
+    <div id="module-3" class="module-content hidden">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+            <aside class="lg:col-span-3 flex flex-col gap-4">
+                <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200">
+                    <h3 class="font-bold text-slate-900 mb-3 text-sm">Bizus da Semelhança</h3>
+                    <div class="space-y-2 text-xs">
+                        <p><strong>AA:</strong> Dois ângulos iguais → triângulos semelhantes.</p>
+                        <p><strong>LAL:</strong> Dois lados proporcionais e ângulo entre eles igual.</p>
+                        <p><strong>LLL:</strong> Três lados proporcionais.</p>
+                        <p class="mt-3 text-slate-500">No triângulo retângulo, a altura divide o original em dois triângulos semelhantes entre si e ao original.</p>
+                    </div>
+                </div>
+            </aside>
+            <section class="lg:col-span-9">
+                <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200" id="mod3-quiz-container"></div>
+            </section>
+        </div>
+    </div>
+
+    <!-- ==================== MÓDULO 4: TRIGONOMETRIA ==================== -->
+    <div id="module-4" class="module-content hidden">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+            <aside class="lg:col-span-3">
+                <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200">
+                    <h3 class="font-bold text-sm mb-3">Razões Trigonométricas</h3>
+                    <p class="text-xs">sen = cateto oposto / hipotenusa</p>
+                    <p class="text-xs">cos = cateto adjacente / hipotenusa</p>
+                    <p class="text-xs">tan = cateto oposto / cateto adjacente</p>
+                    <p class="text-xs mt-2">Ângulos notáveis: 30°, 45°, 60°</p>
+                </div>
+            </aside>
+            <section class="lg:col-span-9">
+                <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200" id="mod4-quiz-container"></div>
+            </section>
+        </div>
+    </div>
+
+    <!-- ==================== MÓDULO 5: TERNOS PITAGÓRICOS ==================== -->
+    <div id="module-5" class="module-content hidden">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+            <aside class="lg:col-span-3">
+                <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200">
+                    <h3 class="font-bold text-sm mb-3">Fórmula de Euclides</h3>
+                    <p class="text-xs">a = m² - n²</p>
+                    <p class="text-xs">b = 2mn</p>
+                    <p class="text-xs">c = m² + n²</p>
+                    <p class="text-xs mt-2">m > n, coprimos, paridades diferentes.</p>
+                </div>
+            </aside>
+            <section class="lg:col-span-9">
+                <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200" id="mod5-quiz-container"></div>
+            </section>
+        </div>
+    </div>
+
+    <!-- ==================== MÓDULO 6: LEI DOS COSSENOS ==================== -->
+    <div id="module-6" class="module-content hidden">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+            <aside class="lg:col-span-3">
+                <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200">
+                    <h3 class="font-bold text-sm mb-3">Lei dos Cossenos</h3>
+                    <p class="text-xs">a² = b² + c² - 2bc cos(θ)</p>
+                    <p class="text-xs mt-2">Para θ = 90° (cos=0), recai no Teorema de Pitágoras.</p>
+                </div>
+            </aside>
+            <section class="lg:col-span-9">
+                <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200" id="mod6-quiz-container"></div>
+            </section>
+        </div>
+    </div>
+
+    <!-- ==================== MÓDULO 7: DEMONSTRAÇÕES ==================== -->
+    <div id="module-7" class="module-content hidden">
+        <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
+            <h2 class="text-xl font-bold mb-4">Demonstrações Interativas</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4" id="demo-cards">
+                <!-- Gerado via JS -->
+            </div>
+        </div>
+    </div>
+</main>
+
+<footer class="bg-white border-t border-slate-200 mt-12 py-6 text-center text-xs text-slate-500">
+    <p>© 2026 CurióMetrics - Autodesenvolvimento de Habilidades Matemáticas.</p>
+</footer>
+
+<script>
+    // ==================== ESTADO GLOBAL ====================
+    let xp = 0;
+    let currentModule = 1;
+    let selectedConfidence = null;
+    let questionsAnsweredMod2 = 0;
+
+    // Índices de questão por módulo
+    const currentQuestionIndex = { 2:0, 3:0, 4:0, 5:0, 6:0 };
+
+    // ==================== BANCOS DE QUESTÕES ====================
+    const questionBank = {
+        2: [
+            {
+                title: "Treino 1 – O Triângulo Perfeito",
+                statement: "Dado um triângulo retângulo com catetos b = 8 e c = 6, encontre as projeções m, n e a altura H.",
+                options: ["m=6.4, n=3.6, H=4.8", "m=5.0, n=5.0, H=4.0", "m=6.0, n=4.0, H=5.0", "m=7.0, n=3.0, H=4.5"],
+                correct: 0,
+                hint: "Hipotenusa a = 10. m = b²/a = 6.4, n = c²/a = 3.6, H² = m·n.",
+                formula: "a = √(8²+6²)=10. m=64/10=6.4, n=36/10=3.6, H=√(6.4·3.6)=4.8.",
+                explanation: "Primeiro Pitágoras: a=10. Depois as Curvas: b²=a·m → 64=10m → m=6.4. c²=a·n → 36=10n → n=3.6. Por fim, Tezinho: H²=6.4·3.6=23.04 → H=4.8.",
+                labels: ["Catetos: 8 e 6", "Hipotenusa: 10", "Achar: m, n, H"],
+                triangleData: { b:8, c:6 }
+            },
+            {
+                title: "Treino 2 – Pitágoras & Produtos Notáveis",
+                statement: "Triângulo retângulo com catetos x e x-4, hipotenusa x+4. Qual o perímetro?",
+                options: ["48 cm", "36 cm", "24 cm", "60 cm"],
+                correct: 0,
+                hint: "Resolva (x+4)² = x² + (x-4)².",
+                formula: "(x+4)² = x² + (x-4)² → x²+8x+16 = x²+x²-8x+16 → x²-16x=0 → x=16. Lados: 12,16,20. Perímetro=48.",
+                explanation: "Aplicando Pitágoras: (x+4)² = x² + (x-4)². Expandindo: x²+8x+16 = 2x²-8x+16 → x²-16x=0 → x=16. Lados: 12, 16, 20. Soma = 48 cm.",
+                labels: ["Catetos: x e x-4", "Hipotenusa: x+4", "Perímetro"],
+                triangleData: { b:12, c:16 }
+            },
+            {
+                title: "Treino 3 – Círculo Inscrito",
+                statement: "Triângulo retângulo inscrito numa circunferência com hipotenusa = diâmetro. Altura h=6, projeção m=3. Qual o raio R?",
+                options: ["R=7.5", "R=6.0", "R=8.0", "R=9.5"],
+                correct: 0,
+                hint: "h² = m·n, e n = 2R - m.",
+                formula: "6² = 3·(2R-3) → 36 = 6R - 9 → 6R = 45 → R = 7.5.",
+                explanation: "Hipotenusa = diâmetro = 2R. Projeções: m=3, n=2R-3. h²=m·n → 36=3(2R-3) → 36=6R-9 → R=7.5.",
+                labels: ["h=6, m=3", "n=2R-3", "Achar: R"],
+                triangleData: { h:6, m:3, n:12 }
+            },
+            {
+                title: "Treino 4 – Cabo de Aço",
+                statement: "Poste de 6 m, cabo do topo ao chão a 8 m do pé. Comprimento do cabo? Projeção do cateto 6 m?",
+                options: ["Cabo 10 m, projeção 3.6 m", "Cabo 10 m, projeção 6.4 m", "Cabo 14 m, projeção 4.8 m", "Cabo 10 m, projeção 4.8 m"],
+                correct: 0,
+                hint: "Hipotenusa = √(6²+8²)=10. Projeção m = b²/a = 36/10 = 3.6.",
+                formula: "a = √(36+64)=10. m = 6²/10 = 3.6.",
+                explanation: "O triângulo tem catetos 6 e 8, hipotenusa 10. A projeção do cateto 6 sobre a hipotenusa é m = 6²/10 = 3.6 m.",
+                labels: ["Catetos: 6 e 8", "Hipotenusa: 10", "Achar: projeção"],
+                triangleData: { b:6, c:8 }
+            },
+            {
+                title: "Treino 5 – Quadrado & Triângulo",
+                statement: "Quadrado de lado 4 cm. Diagonal? Perpendicular a ela a partir de um vértice oposto?",
+                options: ["h=2√2, m=n=2√2", "h=2, m=n=2", "h=4, m=n=2", "h=2√2, m=√2, n=3√2"],
+                correct: 0,
+                hint: "Diagonal = 4√2. Triângulo isósceles, m=n.",
+                formula: "a = 4√2. h = (4·4)/a = 16/(4√2) = 4/√2 = 2√2. m = n = 4²/a = 16/(4√2) = 2√2.",
+                explanation: "Diagonal = hipotenusa = 4√2. Catetos iguais = 4. h = b·c/a = 16/(4√2)=2√2. m=n=16/(4√2)=2√2.",
+                labels: ["Lado: 4", "Diagonal: 4√2", "h, m, n"],
+                triangleData: { b:4, c:4 }
+            },
+            {
+                title: "Treino 6 – Clássico 5-12-13",
+                statement: "Catetos 5 e 12. Altura e projeções?",
+                options: ["h≈4.6, m≈1.9, n≈11.1", "h=5, m=2, n=11", "h≈4.6, m≈2.4, n≈10.6", "h≈4.8, m≈1.9, n≈11.1"],
+                correct: 0,
+                hint: "a=13. m=5²/13≈1.923, n=12²/13≈11.077, h=√(m·n).",
+                formula: "m=25/13≈1.923, n=144/13≈11.077, h≈√21.30≈4.615.",
+                explanation: "Terno pitagórico 5-12-13. Projeções: m=25/13≈1.92, n=144/13≈11.08. h=√(1.92·11.08)≈4.62.",
+                labels: ["Catetos: 5, 12", "Hipotenusa: 13", "h, m, n"],
+                triangleData: { b:5, c:12 }
+            },
+            {
+                title: "Treino 7 – Bambu Quebrado",
+                statement: "Bambu de 10 m quebra, ponta toca o chão a 3 m do pé. Altura da quebra?",
+                options: ["Quebra a 4.55 m, caída 5.45 m", "Quebra a 4.0 m, caída 6.0 m", "Quebra a 4.55 m, caída 6.45 m", "Quebra a 3.5 m, caída 6.5 m"],
+                correct: 0,
+                hint: "(10-x)² = x² + 9.",
+                formula: "100 -20x +x² = x²+9 → -20x = -91 → x=4.55. Hipotenusa=5.45.",
+                explanation: "Parte em pé: x, parte caída (hipotenusa): 10-x. Pitágoras: (10-x)² = x²+3² → x=4.55 m, hipotenusa=5.45 m.",
+                labels: ["Total: 10 m", "Afastamento: 3 m", "Altura da quebra"],
+                triangleData: { b:4.55, c:3 }
+            },
+            {
+                title: "Treino 8 – Corda & Diâmetro",
+                statement: "Circunferência, diâmetro AB=10 cm, ponto C na circunferência com AC=6 cm. Distância de C a AB? Projeções?",
+                options: ["h=4.8, m=3.6, n=6.4", "h=4.0, m=2.0, n=8.0", "h=4.8, m=6.4, n=3.6", "h=3.6, m=4.8, n=5.2"],
+                correct: 0,
+                hint: "BC = √(10²-6²)=8. m=6²/10=3.6, n=8²/10=6.4, h=√(m·n)=4.8.",
+                formula: "BC=8. m=36/10=3.6, n=64/10=6.4, h=√23.04=4.8.",
+                explanation: "Ângulo em C é reto (diâmetro). Catetos 6 e 8, hipotenusa 10. Projeções: m=3.6 (proj. de 6), n=6.4 (proj. de 8). h=√(3.6·6.4)=4.8.",
+                labels: ["Diâmetro: 10", "AC=6", "h, m, n"],
+                triangleData: { b:6, c:8 }
+            },
+            {
+                title: "Treino 9 – Escada na Janela",
+                statement: "Escada de 13 m, base a 5 m do muro. Altura do muro? Ponto de apoio que divide a escada em 1:2?",
+                options: ["Altura 12 m; base ao apoio 4.33 m", "Altura 12 m; base ao apoio 5 m", "Altura 10 m; base ao apoio 3 m", "Altura 12 m; base ao apoio 8.67 m"],
+                correct: 0,
+                hint: "Altura = √(13²-5²)=12. Divisão: x + 2x = 13 → x = 13/3 ≈ 4.33.",
+                formula: "h=√(169-25)=12. x=13/3≈4.33 m (base ao apoio).",
+                explanation: "Muro = cateto: √(13²-5²)=12 m. Apoio divide a escada (hipotenusa) em x e 2x, soma 13 → x=4.33 m.",
+                labels: ["Escada: 13 m", "Base: 5 m", "Divisão 1:2"],
+                triangleData: { b:12, c:5, a:13 }
+            },
+            {
+                title: "Treino 10 – Isósceles Reto",
+                statement: "Triângulo retângulo isósceles, altura relativa à hipotenusa = 2 cm. Catetos e hipotenusa?",
+                options: ["Catetos 2√2, hipotenusa 4", "Catetos 4, hipotenusa 4√2", "Catetos 2, hipotenusa 2√2", "Catetos √8, hipotenusa 4"],
+                correct: 0,
+                hint: "Num retângulo isósceles, h = a/2.",
+                formula: "h = a/2 → 2 = a/2 → a=4. Catetos = a/√2 = 4/√2 = 2√2.",
+                explanation: "Altura = mediana = metade da hipotenusa. Logo a=4. Catetos: a/√2 = 2√2 cm.",
+                labels: ["h=2", "Isósceles", "Catetos, hipotenusa"],
+                triangleData: { a:4, b:2*Math.sqrt(2), c:2*Math.sqrt(2) }
+            }
+        ],
+        3: [
+            {
+                title: "Semelhança 1 – Os Três Triângulos",
+                statement: "No triângulo retângulo ABC (reto em A), traça-se a altura AH. Os triângulos ABH, AHC e ABC são semelhantes. Se AB=6, AC=8, qual a razão de semelhança entre ABH e ABC?",
+                options: ["3/5", "4/5", "6/10", "8/10"],
+                correct: 0,
+                hint: "BC = 10. ABH ~ ABC, razão = AB/BC = 6/10 = 3/5.",
+                formula: "AB/BC = 6/10 = 3/5.",
+                explanation: "ABH e ABC compartilham o ângulo B e são retângulos (AA). A razão é AB (cateto do pequeno oposto a B) / BC (hipotenusa do grande) = 6/10 = 3/5.",
+                labels: ["AB=6, AC=8", "BC=10", "Razão ABH/ABC"]
+            },
+            {
+                title: "Semelhança 2 – Deduzindo a Curva",
+                statement: "Use a semelhança entre ABH e ABC para deduzir b² = a·m. Dados: cateto b=5, c=12, hipotenusa a=13.",
+                options: ["b/a = m/b → b² = a·m", "b/a = h/c", "m/b = a/c", "b/c = m/n"],
+                correct: 0,
+                hint: "Em ABH: cateto oposto a B é m. Em ABC: cateto oposto a B é b.",
+                formula: "m/b = b/a → b² = a·m.",
+                explanation: "ABH ~ ABC. Lados correspondentes: BH (m) ↔ AC (b), AB (b) ↔ BC (a). Proporção: m/b = b/a → b² = a·m.",
+                labels: ["b=5, a=13", "Semelhança", "Proporção correta"]
+            }
+        ],
+        4: [
+            {
+                title: "Trigonometria 1 – Ângulo de Elevação",
+                statement: "Uma pessoa vê o topo de um prédio sob ângulo de 30°, a 40 m do prédio. Altura? (Use √3 ≈ 1.73)",
+                options: ["Aprox. 23.1 m", "20 m", "34.6 m", "69.2 m"],
+                correct: 0,
+                hint: "tan(30°) = altura / 40. tan(30°) = 1/√3 ≈ 0.577.",
+                formula: "h = 40·tan(30°) = 40/√3 ≈ 23.1 m.",
+                explanation: "tg(30°) = cateto oposto (altura) / adjacente (40). tg(30°)=1/√3, então altura = 40/1.73 ≈ 23.1 m.",
+                labels: ["Ângulo: 30°", "Distância: 40 m", "Altura"]
+            },
+            {
+                title: "Trigonometria 2 – Corda no Círculo",
+                statement: "Círculo de raio 10 cm, corda AB vista do centro sob ângulo de 120°. Comprimento da corda?",
+                options: ["10√3 ≈ 17.3 cm", "10 cm", "20 cm", "20√3 cm"],
+                correct: 0,
+                hint: "Meia corda = 10·sen(60°).",
+                formula: "Meia corda = 10·(√3/2)=5√3. Corda = 10√3 ≈ 17.3 cm.",
+                explanation: "Perpendicular do centro à corda divide ângulo em dois de 60°. Triângulo retângulo: hipotenusa=10, ângulo=60°. sen60°=meia corda/10 → meia corda=5√3 → corda=10√3.",
+                labels: ["Raio: 10", "Ângulo: 120°", "Corda"]
+            }
+        ],
+        5: [
+            {
+                title: "Ternos 1 – Gerando com Euclides",
+                statement: "Use m=3, n=1 na fórmula de Euclides. Qual terno é gerado?",
+                options: ["(8,6,10)", "(6,8,10)", "(3,4,5)", "(5,12,13)"],
+                correct: 0,
+                hint: "a = m²-n², b = 2mn, c = m²+n².",
+                formula: "a=9-1=8, b=6, c=10.",
+                explanation: "Fórmula de Euclides: a=m²-n²=8, b=2mn=6, c=m²+n²=10. Terno (8,6,10) é múltiplo de (4,3,5).",
+                labels: ["m=3, n=1", "Euclides", "Terno gerado"]
+            },
+            {
+                title: "Ternos 2 – Primitividade",
+                statement: "Qual terno é primitivo?",
+                options: ["(20,21,29)", "(14,48,50)", "(30,40,50)", "(18,24,30)"],
+                correct: 0,
+                hint: "MDC = 1.",
+                formula: "20²+21²=841=29². MDC=1.",
+                explanation: "(20,21,29): MDC=1, primitivo. Os outros são múltiplos de ternos menores (7-24-25, 3-4-5, 3-4-5).",
+                labels: ["Candidatos", "MDC", "Primitivo?"]
+            }
+        ],
+        6: [
+            {
+                title: "Lei dos Cossenos 1 – Triângulo Oblíquo",
+                statement: "Dois lados medem 7 e 9, ângulo entre eles 60°. Qual o terceiro lado?",
+                options: ["√67 ≈ 8.19", "√130 ≈ 11.40", "√88 ≈ 9.38", "8"],
+                correct: 0,
+                hint: "a² = 7²+9² - 2·7·9·cos(60°). cos60°=1/2.",
+                formula: "a² = 49+81 - 63 = 67 → a=√67≈8.19.",
+                explanation: "Lei dos cossenos: a² = 7²+9² - 2·7·9·0.5 = 130 - 63 = 67. a=√67≈8.19.",
+                labels: ["Lados: 7, 9", "Ângulo: 60°", "Lado oposto"]
+            },
+            {
+                title: "Lei dos Cossenos 2 – Classificação",
+                statement: "Lados 5, 6 e 8. O triângulo é?",
+                options: ["Obtusângulo", "Retângulo", "Acutângulo", "Indeterminado"],
+                correct: 0,
+                hint: "Compare 8² com 5²+6².",
+                formula: "64 > 25+36=61 → obtusângulo.",
+                explanation: "Maior lado 8²=64. 5²+6²=61. Como 64 > 61, ângulo oposto > 90° → obtusângulo.",
+                labels: ["Lados: 5,6,8", "8² vs 5²+6²", "Tipo"]
+            }
+        ]
+    };
+
+    // ==================== FUNÇÕES DO SANDBOX (MÓDULO 1) ====================
+    const slider = document.getElementById('triangle-slider');
+    function updateTriangle(sliderVal) {
+        const totalWidth = 400, startX = 50, endX = 450, yBase = 250;
+        const ratio = sliderVal / 100;
+        const splitX = startX + totalWidth * ratio;
+        const m = splitX - startX, n = endX - splitX;
+        const h = Math.sqrt(m * n);
+        const yTop = yBase - h;
+
+        document.getElementById('poly-main').setAttribute('points', `${startX},${yBase} ${endX},${yBase} ${splitX},${yTop}`);
+        document.getElementById('line-h').setAttribute('x1', splitX);
+        document.getElementById('line-h').setAttribute('y1', yTop);
+        document.getElementById('line-h').setAttribute('x2', splitX);
+        document.getElementById('line-h').setAttribute('y2', yBase);
+
+        const scaleA = 15, scaleM = (m/totalWidth)*scaleA, scaleN = (n/totalWidth)*scaleA;
+        const scaleH = Math.sqrt(scaleM * scaleN);
+        const scaleB = Math.sqrt(scaleM * scaleA), scaleC = Math.sqrt(scaleN * scaleA);
+
+        document.getElementById('label-b').textContent = `b = ${scaleB.toFixed(1)}`;
+        document.getElementById('label-c').textContent = `c = ${scaleC.toFixed(1)}`;
+        document.getElementById('label-a').textContent = `a = ${scaleA}`;
+        document.getElementById('label-h').textContent = `h = ${scaleH.toFixed(1)}`;
+        document.getElementById('label-m').textContent = `m = ${scaleM.toFixed(1)}`;
+        document.getElementById('label-n').textContent = `n = ${scaleN.toFixed(1)}`;
+
+        document.getElementById('pythagoras-check').textContent = `${scaleB.toFixed(1)}² + ${scaleC.toFixed(1)}² = ${scaleA}²`;
+        document.getElementById('calc-tezao').innerHTML = `${scaleA} × ${scaleH.toFixed(1)} = ${scaleB.toFixed(1)} × ${scaleC.toFixed(1)} <br><span class="text-indigo-600 font-semibold">(${(scaleA*scaleH).toFixed(1)} = ${(scaleB*scaleC).toFixed(1)})</span>`;
+        document.getElementById('calc-tezinho').innerHTML = `${scaleH.toFixed(1)}² = ${scaleM.toFixed(1)} × ${scaleN.toFixed(1)} <br><span class="text-indigo-600 font-semibold">(${(scaleH*scaleH).toFixed(1)} = ${(scaleM*scaleN).toFixed(1)})</span>`;
+        document.getElementById('calc-curva-b').innerHTML = `${scaleB.toFixed(1)}² = ${scaleA} × ${scaleM.toFixed(1)} <br><span class="text-indigo-600 font-semibold">(${(scaleB*scaleB).toFixed(1)} = ${(scaleA*scaleM).toFixed(1)})</span>`;
+        document.getElementById('calc-curva-c').innerHTML = `${scaleC.toFixed(1)}² = ${scaleA} × ${scaleN.toFixed(1)} <br><span class="text-indigo-600 font-semibold">(${(scaleC*scaleC).toFixed(1)} = ${(scaleA*scaleN).toFixed(1)})</span>`;
+        document.getElementById('slider-percentage').textContent = `Proporção: ${Math.round(sliderVal)}%`;
+        document.getElementById('check-interact').checked = true;
+    }
+    slider.addEventListener('input', e => updateTriangle(e.target.value));
+
+    function applyQuestionDataToSandbox() {
+        const q = questionBank[2]?.[currentQuestionIndex[2]];
+        if (q?.triangleData?.b && q?.triangleData?.c) {
+            const b = q.triangleData.b, c = q.triangleData.c;
+            if (c === 0) return;
+            const R = Math.pow(b/c, 2);
+            let val = Math.round((R/(1+R))*100);
+            val = Math.max(15, Math.min(85, val));
+            slider.value = val;
+            updateTriangle(val);
+        }
+    }
+
+    function reviewInLab() {
+        switchModule(1);
+        setTimeout(applyQuestionDataToSandbox, 100);
+    }
+
+    // ==================== TROCA DE MÓDULOS ====================
+    function switchModule(moduleId) {
+        const requiredXP = (moduleId - 1) * 25;
+        if (xp < requiredXP && moduleId > 2) {
+            alert(`🔒 Módulo bloqueado! Você precisa de ${requiredXP} XP para acessá-lo. Continue treinando!`);
+            return;
+        }
+        currentModule = moduleId;
+        document.querySelectorAll('.module-content').forEach(el => el.classList.add('hidden'));
+        document.getElementById(`module-${moduleId}`).classList.remove('hidden');
+
+        document.querySelectorAll('.module-btn').forEach(btn => {
+            const mod = parseInt(btn.dataset.module);
+            btn.classList.remove('active');
+            if (mod === moduleId) btn.classList.add('active');
+            btn.classList.toggle('locked', xp < (mod-1)*25 && mod > 2);
+        });
+
+        if (moduleId === 2) renderMod2Quiz();
+        if ([3,4,5,6].includes(moduleId)) renderGenericQuiz(moduleId);
+        if (moduleId === 7) renderDemonstrations();
+        lucide.createIcons();
+    }
+
+    // ==================== RENDERIZAÇÃO DE QUIZ ====================
+    function renderMod2Quiz() {
+        const q = questionBank[2][currentQuestionIndex[2]];
+        document.getElementById('mod2-question-level').textContent = q.title;
+        document.getElementById('mod2-question-title').textContent = "Bizu do Curió em Ação";
+        document.getElementById('mod2-question-counter').textContent = `Questão ${currentQuestionIndex[2]+1} de ${questionBank[2].length}`;
+        document.getElementById('mod2-question-statement').textContent = q.statement;
+        document.getElementById('mod2-q-val-1').textContent = q.labels[0];
+        document.getElementById('mod2-q-val-2').textContent = q.labels[1];
+        document.getElementById('mod2-q-val-3').textContent = q.labels[2];
+
+        const opts = document.getElementById('mod2-quiz-options');
+        opts.innerHTML = '';
+        q.options.forEach((opt, idx) => {
+            const btn = document.createElement('button');
+            btn.className = "w-full text-left p-3 rounded-xl border border-slate-200 hover:bg-violet-50 transition text-sm";
+            btn.innerHTML = `<span class="font-semibold">${String.fromCharCode(65+idx)}.</span> ${opt}`;
+            btn.onclick = () => selectMod2Option(idx);
+            opts.appendChild(btn);
+        });
+        document.getElementById('mod2-quiz-feedback').classList.add('hidden');
+    }
+
+    function selectMod2Option(idx) {
+        const q = questionBank[2][currentQuestionIndex[2]];
+        const fb = document.getElementById('mod2-quiz-feedback');
+        fb.classList.remove('hidden');
+        if (idx === q.correct) {
+            fb.className = "mt-6 p-4 rounded-xl border border-emerald-200 bg-emerald-50 flex flex-col gap-2";
+            fb.innerHTML = `<p class="font-bold text-emerald-700">✅ Correto!</p><p class="text-xs">${q.explanation}</p>`;
+            xp += 25; updateXPDisplay(); questionsAnsweredMod2++;
+            document.getElementById('check-answer').checked = true;
+        } else {
+            fb.className = "mt-6 p-4 rounded-xl border border-rose-200 bg-rose-50 flex flex-col gap-2";
+            fb.innerHTML = `<p class="font-bold text-rose-700">❌ Atenção!</p><p class="text-xs">${q.hint}</p><p class="text-xs">${q.explanation}</p>`;
+        }
+        const nextBtn = document.createElement('button');
+        nextBtn.className = "mt-2 py-2 px-4 bg-indigo-600 text-white rounded-lg text-xs self-start font-bold";
+        nextBtn.innerText = "Próxima Questão";
+        nextBtn.onclick = () => {
+            currentQuestionIndex[2] = (currentQuestionIndex[2] + 1) % questionBank[2].length;
+            renderMod2Quiz();
+        };
+        fb.appendChild(nextBtn);
+
+        const revBtn = document.createElement('button');
+        revBtn.className = "mt-1 py-2 px-4 bg-amber-600 text-white rounded-lg text-xs self-start font-bold";
+        revBtn.innerText = "🔬 Revisar no Laboratório";
+        revBtn.onclick = reviewInLab;
+        fb.appendChild(revBtn);
+
+        document.getElementById('module-2-progress').textContent = `Questões respondidas: ${questionsAnsweredMod2}`;
+        document.getElementById('module-2-progress-bar').style.width = `${(questionsAnsweredMod2/questionBank[2].length)*100}%`;
+    }
+
+    function renderGenericQuiz(moduleId) {
+        const container = document.getElementById(`mod${moduleId}-quiz-container`);
+        const q = questionBank[moduleId][currentQuestionIndex[moduleId]];
+        container.innerHTML = `
+            <h3 class="font-bold text-lg mb-2">${q.title}</h3>
+            <p class="text-sm mb-3">${q.statement}</p>
+            <p class="text-xs text-slate-400">Questão ${currentQuestionIndex[moduleId]+1} de ${questionBank[moduleId].length}</p>
+            <div class="space-y-2 mt-3" id="generic-options-${moduleId}"></div>
+            <div id="generic-feedback-${moduleId}" class="hidden mt-4 p-3 rounded-xl border"></div>
+        `;
+        const opts = document.getElementById(`generic-options-${moduleId}`);
+        q.options.forEach((opt, idx) => {
+            const btn = document.createElement('button');
+            btn.className = "w-full text-left p-3 rounded-xl border border-slate-200 hover:bg-violet-50 transition text-sm";
+            btn.innerHTML = `<span class="font-semibold">${String.fromCharCode(65+idx)}.</span> ${opt}`;
+            btn.onclick = () => selectGenericOption(moduleId, idx);
+            opts.appendChild(btn);
+        });
+    }
+
+    function selectGenericOption(moduleId, idx) {
+        const q = questionBank[moduleId][currentQuestionIndex[moduleId]];
+        const fb = document.getElementById(`generic-feedback-${moduleId}`);
+        fb.classList.remove('hidden');
+        if (idx === q.correct) {
+            fb.className = "mt-4 p-3 rounded-xl border border-emerald-200 bg-emerald-50";
+            fb.innerHTML = `<p class="font-bold text-emerald-700">✅ Correto!</p><p class="text-xs">${q.explanation}</p>`;
+            xp += 25; updateXPDisplay();
+        } else {
+            fb.className = "mt-4 p-3 rounded-xl border border-rose-200 bg-rose-50";
+            fb.innerHTML = `<p class="font-bold text-rose-700">❌ Atenção!</p><p class="text-xs">${q.hint}</p><p class="text-xs">${q.explanation}</p>`;
+        }
+        const nextBtn = document.createElement('button');
+        nextBtn.className = "mt-2 py-1.5 px-3 bg-indigo-600 text-white rounded-lg text-xs font-bold";
+        nextBtn.innerText = "Próxima";
+        nextBtn.onclick = () => {
+            currentQuestionIndex[moduleId] = (currentQuestionIndex[moduleId] + 1) % questionBank[moduleId].length;
+            renderGenericQuiz(moduleId);
+        };
+        fb.appendChild(nextBtn);
+    }
+
+    function renderDemonstrations() {
+        document.getElementById('demo-cards').innerHTML = `
+            <div class="p-5 border rounded-xl bg-indigo-50">
+                <h3 class="font-bold text-lg">📐 Bhaskara (séc. XII)</h3>
+                <p class="text-sm mt-2">Quatro triângulos retângulos dentro de um quadrado de lado c. Área total: c² = 4·(ab/2) + (b-a)² = a² + b².</p>
+            </div>
+            <div class="p-5 border rounded-xl bg-amber-50">
+                <h3 class="font-bold text-lg">📏 Semelhança (Euclides)</h3>
+                <p class="text-sm mt-2">A altura divide o triângulo original em dois triângulos semelhantes, gerando as relações métricas.</p>
+            </div>
+            <div class="p-5 border rounded-xl bg-emerald-50">
+                <h3 class="font-bold text-lg">🧩 Perigal (dissecação)</h3>
+                <p class="text-sm mt-2">Recortando o quadrado maior e os dois menores, é possível rearranjar as peças para provar a igualdade de áreas.</p>
+            </div>
+            <div class="p-5 border rounded-xl bg-rose-50">
+                <h3 class="font-bold text-lg">🎨 Leonardo da Vinci</h3>
+                <p class="text-sm mt-2">Usa simetria e congruência de triângulos e hexágonos para demonstrar o teorema.</p>
+            </div>
+        `;
+    }
+
+    // ==================== PROGRESSÃO DE XP E AUTOAVALIAÇÃO ====================
+    function updateXPDisplay() {
+        document.getElementById('header-xp').textContent = xp;
+        let nivel = 1;
+        if (xp >= 150) nivel = 7;
+        else if (xp >= 125) nivel = 6;
+        else if (xp >= 100) nivel = 5;
+        else if (xp >= 75) nivel = 4;
+        else if (xp >= 50) nivel = 3;
+        else if (xp >= 25) nivel = 2;
+        document.getElementById('header-level').textContent = `Nível ${nivel}`;
+        // Atualizar bloqueios visuais
+        document.querySelectorAll('.module-btn').forEach(btn => {
+            const mod = parseInt(btn.dataset.module);
+            btn.classList.toggle('locked', xp < (mod-1)*25 && mod > 2);
+        });
+    }
+
+    function setConfidence(level) {
+        selectedConfidence = level;
+        const status = document.getElementById('confidence-status');
+        if (level === 'Baixo') status.innerHTML = `Confiança: <span class="font-bold text-rose-600">Frágil</span>. Explore o Laboratório!`;
+        else if (level === 'Médio') status.innerHTML = `Confiança: <span class="font-bold text-amber-600">OK</span>. Continue praticando!`;
+        else status.innerHTML = `Confiança: <span class="font-bold text-emerald-600">Dominado</span>. Excelente!`;
+    }
+
+    // ==================== INICIALIZAÇÃO ====================
+    window.onload = function() {
+        lucide.createIcons();
+        updateTriangle(36);
+        switchModule(1);
+    };
+</script>
+</body>
+</html>
