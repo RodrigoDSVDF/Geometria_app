@@ -71,6 +71,7 @@
         <button onclick="switchModule(5)" class="module-btn locked px-3 py-1.5 rounded-full text-xs font-bold whitespace-nowrap" data-module="5">🔢 Ternos</button>
         <button onclick="switchModule(6)" class="module-btn locked px-3 py-1.5 rounded-full text-xs font-bold whitespace-nowrap" data-module="6">📈 Lei dos Cossenos</button>
         <button onclick="switchModule(7)" class="module-btn locked px-3 py-1.5 rounded-full text-xs font-bold whitespace-nowrap" data-module="7">✨ Demonstrações</button>
+        <button onclick="switchModule(8)" class="module-btn locked px-3 py-1.5 rounded-full text-xs font-bold whitespace-nowrap" data-module="8">📏 Tales</button>
     </div>
 </nav>
 
@@ -131,7 +132,6 @@
                     </div>
                 </div>
             </aside>
-
             <section class="lg:col-span-9 flex flex-col gap-6">
                 <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
                     <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-4">
@@ -206,7 +206,7 @@
         </div>
     </div>
 
-    <!-- ==================== MÓDULO 2: TREINO (QUIZ PRINCIPAL) ==================== -->
+    <!-- ==================== MÓDULO 2: TREINO ==================== -->
     <div id="module-2" class="module-content hidden">
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
             <aside class="lg:col-span-3 flex flex-col gap-4">
@@ -216,6 +216,7 @@
                     <div class="mt-2 bg-slate-100 h-2 rounded-full">
                         <div id="module-2-progress-bar" class="bg-indigo-600 h-2 rounded-full transition-all" style="width: 0%"></div>
                     </div>
+                    <button onclick="reviewMistakes()" class="mt-3 py-1.5 px-3 bg-rose-500 text-white rounded-lg text-xs font-bold w-full">📋 Revisar Erros</button>
                 </div>
             </aside>
             <section class="lg:col-span-9">
@@ -278,6 +279,27 @@
                 </div>
             </aside>
             <section class="lg:col-span-9">
+                <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 mb-6">
+                    <h3 class="font-bold text-lg mb-2">Círculo Trigonométrico Interativo</h3>
+                    <div class="flex flex-col lg:flex-row gap-4 items-center">
+                        <svg id="unit-circle" viewBox="-110 -110 220 220" width="220" height="220" class="border border-slate-200 rounded-full">
+                            <circle cx="0" cy="0" r="100" fill="none" stroke="#e2e8f0" stroke-width="2"/>
+                            <line x1="0" y1="0" x2="100" y2="0" stroke="#cbd5e1" stroke-dasharray="4"/>
+                            <line id="radius-line" x1="0" y1="0" x2="70.7" y2="-70.7" stroke="#4f46e5" stroke-width="3"/>
+                            <circle id="point-p" cx="70.7" cy="-70.7" r="6" fill="#4f46e5" cursor="grab"/>
+                            <line id="proj-sen" x1="70.7" y1="-70.7" x2="70.7" y2="0" stroke="#f59e0b" stroke-dasharray="3"/>
+                            <line id="proj-cos" x1="70.7" y1="-70.7" x2="0" y2="-70.7" stroke="#10b981" stroke-dasharray="3"/>
+                            <text id="label-sen" x="75" y="-35" fill="#f59e0b" font-size="11">sen</text>
+                            <text id="label-cos" x="35" y="-80" fill="#10b981" font-size="11">cos</text>
+                        </svg>
+                        <div class="text-sm space-y-1">
+                            <p>Ângulo θ: <span id="angle-val" class="font-bold">45°</span></p>
+                            <p>sen(θ) = <span id="sen-val" class="font-mono text-amber-600">0,707</span></p>
+                            <p>cos(θ) = <span id="cos-val" class="font-mono text-emerald-600">0,707</span></p>
+                            <p>tg(θ) = <span id="tg-val" class="font-mono text-indigo-600">1,000</span></p>
+                        </div>
+                    </div>
+                </div>
                 <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200" id="mod4-quiz-container"></div>
             </section>
         </div>
@@ -296,6 +318,28 @@
                 </div>
             </aside>
             <section class="lg:col-span-9">
+                <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 mb-6">
+                    <h3 class="font-bold text-lg mb-2">Gerador Interativo de Ternos</h3>
+                    <div class="flex gap-4 items-end flex-wrap">
+                        <div>
+                            <label class="text-xs">m: <input type="range" id="slider-m" min="2" max="10" value="3" class="w-32"></label>
+                            <span id="val-m" class="font-bold ml-2">3</span>
+                        </div>
+                        <div>
+                            <label class="text-xs">n: <input type="range" id="slider-n" min="1" max="9" value="1" class="w-32"></label>
+                            <span id="val-n" class="font-bold ml-2">1</span>
+                        </div>
+                        <div class="text-sm">
+                            Terno gerado: <span id="terno-gerado" class="font-mono font-bold">(8, 6, 10)</span>
+                        </div>
+                        <svg id="ternos-sandbox" viewBox="0 0 200 130" width="200" height="130" class="border border-slate-200 rounded-lg">
+                            <polygon id="ternos-tri" points="10,110 190,110 50,40" fill="rgba(79,70,229,0.15)" stroke="#4f46e5" stroke-width="2"/>
+                            <text id="ternos-label-b" x="30" y="70" fill="#a5b4fc" font-size="10">b</text>
+                            <text id="ternos-label-c" x="120" y="70" fill="#a5b4fc" font-size="10">c</text>
+                            <text id="ternos-label-a" x="95" y="125" fill="#e2e8f0" font-size="10">a</text>
+                        </svg>
+                    </div>
+                </div>
                 <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200" id="mod5-quiz-container"></div>
             </section>
         </div>
@@ -319,13 +363,70 @@
 
     <!-- ==================== MÓDULO 7: DEMONSTRAÇÕES ==================== -->
     <div id="module-7" class="module-content hidden">
-        <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
-            <h2 class="text-xl font-bold mb-4">Demonstrações Interativas</h2>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4" id="demo-cards">
-                <!-- Gerado via JS -->
+        <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 mb-6">
+            <h3 class="font-bold text-lg mb-3">Bhaskara: o quadrado que vira dois</h3>
+            <p class="text-sm mb-4">Mova o controle para ver como quatro triângulos retângulos se rearranjam.</p>
+            <div class="flex justify-center mb-4">
+                <svg id="bhaskara-svg" viewBox="0 0 400 200" width="100%" height="200">
+                    <rect id="big-square" x="20" y="20" width="180" height="180" fill="none" stroke="#4f46e5" stroke-width="3"/>
+                    <polygon id="tri1" points="20,20 110,20 20,110" fill="rgba(245,158,11,0.4)" stroke="#f59e0b" stroke-width="1"/>
+                    <polygon id="tri2" points="200,20 200,110 110,20" fill="rgba(16,185,129,0.4)" stroke="#10b981" stroke-width="1"/>
+                    <polygon id="tri3" points="200,200 110,200 200,110" fill="rgba(245,158,11,0.4)" stroke="#f59e0b" stroke-width="1"/>
+                    <polygon id="tri4" points="20,200 20,110 110,200" fill="rgba(16,185,129,0.4)" stroke="#10b981" stroke-width="1"/>
+                    <rect id="new-square" x="260" y="20" width="0" height="0" fill="none" stroke="#ef4444" stroke-width="3" stroke-dasharray="4"/>
+                    <text x="100" y="10" font-size="10" fill="#4f46e5">c²</text>
+                    <text x="280" y="10" font-size="10" fill="#ef4444">a² + b²</text>
+                </svg>
+            </div>
+            <input type="range" id="bhaskara-slider" min="0" max="100" value="0" class="w-full">
+            <p class="text-xs mt-2">Fase: <span id="bhaskara-fase">0% (inicial)</span></p>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div class="p-5 border rounded-xl bg-amber-50">
+                <h3 class="font-bold text-lg">📏 Semelhança (Euclides)</h3>
+                <p class="text-sm mt-2">A altura divide o triângulo original em dois triângulos semelhantes, gerando as relações métricas.</p>
+            </div>
+            <div class="p-5 border rounded-xl bg-emerald-50">
+                <h3 class="font-bold text-lg">🧩 Perigal (dissecação)</h3>
+                <p class="text-sm mt-2">Recortando o quadrado maior e os dois menores, é possível rearranjar as peças para provar a igualdade de áreas.</p>
             </div>
         </div>
     </div>
+
+    <!-- ==================== MÓDULO 8: TEOREMA DE TALES ==================== -->
+    <div id="module-8" class="module-content hidden">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+            <aside class="lg:col-span-3">
+                <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200">
+                    <h3 class="font-bold text-sm">Teorema de Tales</h3>
+                    <p class="text-xs">Um feixe de retas paralelas determina sobre duas transversais segmentos proporcionais.</p>
+                </div>
+            </aside>
+            <section class="lg:col-span-9">
+                <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 mb-6">
+                    <h3 class="font-bold text-lg mb-2">Feixe de Paralelas Interativo</h3>
+                    <svg id="tales-svg" viewBox="0 0 400 250" width="100%" height="250">
+                        <line x1="50" y1="30" x2="350" y2="30" stroke="#4f46e5" stroke-width="2"/>
+                        <line x1="50" y1="100" x2="350" y2="100" stroke="#4f46e5" stroke-width="2"/>
+                        <line x1="50" y1="170" x2="350" y2="170" stroke="#4f46e5" stroke-width="2"/>
+                        <line id="transv1" x1="80" y1="10" x2="280" y2="230" stroke="#f59e0b" stroke-width="2"/>
+                        <line id="transv2" x1="180" y1="10" x2="320" y2="230" stroke="#10b981" stroke-width="2"/>
+                        <text x="70" y="25" fill="#4f46e5" font-size="10">r1</text>
+                        <text x="70" y="95" fill="#4f46e5" font-size="10">r2</text>
+                        <text x="70" y="165" fill="#4f46e5" font-size="10">r3</text>
+                    </svg>
+                    <div class="mt-2 flex gap-4">
+                        <label class="text-xs">Transversal 1 (laranja): <input type="range" id="tales-slider1" min="0" max="100" value="30" class="w-24"></label>
+                        <label class="text-xs">Transversal 2 (verde): <input type="range" id="tales-slider2" min="0" max="100" value="70" class="w-24"></label>
+                    </div>
+                    <p class="text-xs mt-1">Segmentos na laranja: AB, BC. Razão AB/BC = <span id="tales-ratio1">0.60</span>.
+                    Na verde, DE/EF = <span id="tales-ratio2">0.60</span>.</p>
+                </div>
+                <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200" id="mod8-quiz-container"></div>
+            </section>
+        </div>
+    </div>
+
 </main>
 
 <footer class="bg-white border-t border-slate-200 mt-12 py-6 text-center text-xs text-slate-500">
@@ -338,9 +439,7 @@
     let currentModule = 1;
     let selectedConfidence = null;
     let questionsAnsweredMod2 = 0;
-
-    // Índices de questão por módulo
-    const currentQuestionIndex = { 2:0, 3:0, 4:0, 5:0, 6:0 };
+    const currentQuestionIndex = { 2:0, 3:0, 4:0, 5:0, 6:0, 8:0 };
 
     // ==================== BANCOS DE QUESTÕES ====================
     const questionBank = {
@@ -476,6 +575,36 @@
                 formula: "m/b = b/a → b² = a·m.",
                 explanation: "ABH ~ ABC. Lados correspondentes: BH (m) ↔ AC (b), AB (b) ↔ BC (a). Proporção: m/b = b/a → b² = a·m.",
                 labels: ["b=5, a=13", "Semelhança", "Proporção correta"]
+            },
+            {
+                title: "Semelhança 3 – Altura e Projeções",
+                statement: "No triângulo retângulo ABC (reto em A), a altura AH mede 4,8 cm e a projeção BH mede 3,6 cm. Determine a medida da hipotenusa BC.",
+                options: ["10 cm", "12 cm", "8 cm", "9,6 cm"],
+                correct: 0,
+                hint: "Use h² = m·n para achar n, depois a = m + n.",
+                formula: "h² = m·n → 4,8² = 3,6·n → n = 6,4. a = m + n = 10 cm.",
+                explanation: "Pelo Tezinho, 4,8² = 3,6·n → 23,04 = 3,6·n → n = 6,4. Logo, a = 3,6 + 6,4 = 10 cm.",
+                labels: ["h = 4,8", "m = 3,6", "Achar: a"]
+            },
+            {
+                title: "Semelhança 4 – Construção Geométrica",
+                statement: "Trace um segmento AB de 9 cm. Marque um ponto C sobre AB tal que AC = 4 cm. Construa um triângulo retângulo com hipotenusa AB e projeção AC. Qual é a altura relativa à hipotenusa?",
+                options: ["√20 ≈ 4,47 cm", "√12 ≈ 3,46 cm", "6 cm", "5 cm"],
+                correct: 0,
+                hint: "m = 4, n = 9-4 = 5. h = √(m·n).",
+                formula: "h = √(4·5) = √20 ≈ 4,47 cm.",
+                explanation: "A hipotenusa AB é dividida pelas projeções m = AC = 4 cm e n = CB = 5 cm. Pelo Tezinho, h = √(4·5) = √20 ≈ 4,47 cm.",
+                labels: ["AB = 9", "AC = 4", "Achar: h"]
+            },
+            {
+                title: "Semelhança 5 – Aplicação no Cotidiano",
+                statement: "Uma escada de 5 m está encostada em um muro. O pé da escada está a 3 m do muro. A que altura do muro a escada toca? Se o ângulo entre a escada e o chão é θ, qual é o valor de cos(θ)?",
+                options: ["Altura = 4 m, cos = 3/5", "Altura = 4 m, cos = 4/5", "Altura = 5 m, cos = 3/5", "Altura = 3 m, cos = 4/5"],
+                correct: 0,
+                hint: "Pitágoras: altura = √(5²-3²)=4. cos(θ) = adjacente/hipotenusa = 3/5.",
+                formula: "h = 4, cos = 3/5.",
+                explanation: "O triângulo retângulo tem catetos 3 m (base) e 4 m (altura) e hipotenusa 5 m. O ângulo entre a escada e o chão é θ; o cateto adjacente é a base (3 m), logo cos(θ) = 3/5.",
+                labels: ["Escada: 5 m", "Base: 3 m", "Achar: altura, cos(θ)"]
             }
         ],
         4: [
@@ -498,6 +627,36 @@
                 formula: "Meia corda = 10·(√3/2)=5√3. Corda = 10√3 ≈ 17.3 cm.",
                 explanation: "Perpendicular do centro à corda divide ângulo em dois de 60°. Triângulo retângulo: hipotenusa=10, ângulo=60°. sen60°=meia corda/10 → meia corda=5√3 → corda=10√3.",
                 labels: ["Raio: 10", "Ângulo: 120°", "Corda"]
+            },
+            {
+                title: "Trigonometria 3 – Teodolito Caseiro",
+                statement: "Você mede o ângulo de elevação do topo de uma árvore como sendo 45°. Você está a 20 m da árvore. Qual é a altura da árvore? (Use tg 45° = 1)",
+                options: ["20 m", "10√2 m", "10 m", "40 m"],
+                correct: 0,
+                hint: "tg(45°) = altura / 20 = 1.",
+                formula: "altura = 20·1 = 20 m.",
+                explanation: "tg(45°) = cateto oposto / adjacente = altura / 20. Como tg(45°) = 1, a altura = 20 m.",
+                labels: ["Ângulo: 45°", "Distância: 20 m", "Altura"]
+            },
+            {
+                title: "Trigonometria 4 – Identidade Fundamental",
+                statement: "Sabendo que em um triângulo retângulo sen(α) = 0,6, calcule cos(α) e a tangente de α.",
+                options: ["cos=0,8; tg=0,75", "cos=0,4; tg=1,5", "cos=0,8; tg=0,6", "cos=0,6; tg=1,0"],
+                correct: 0,
+                hint: "Use sen² + cos² = 1 → cos² = 1 - 0,36 = 0,64 → cos = 0,8. tg = sen/cos = 0,6/0,8 = 0,75.",
+                formula: "cos=√(1-0,36)=0,8; tg=0,6/0,8=0,75.",
+                explanation: "Pela relação fundamental, cos²α = 1 - 0,36 = 0,64, logo cosα = 0,8 (positivo, pois ângulo agudo). tgα = 0,6/0,8 = 0,75.",
+                labels: ["sen=0,6", "Identidade", "cos, tg"]
+            },
+            {
+                title: "Trigonometria 5 – Rampa de Acessibilidade",
+                statement: "Uma rampa para cadeirantes deve ter inclinação máxima de 8% (tg = 0,08). Se a altura a vencer é 0,80 m, qual deve ser o comprimento horizontal mínimo da rampa?",
+                options: ["10 m", "8 m", "6,4 m", "12 m"],
+                correct: 0,
+                hint: "tg = altura / comprimento → 0,08 = 0,80 / x → x = 10 m.",
+                formula: "x = 0,80 / 0,08 = 10 m.",
+                explanation: "A tangente do ângulo de inclinação é a razão entre a altura e o comprimento horizontal. Assim, 0,08 = 0,80 / x, logo x = 10 m.",
+                labels: ["tg = 0,08", "Altura: 0,80 m", "Comprimento"]
             }
         ],
         5: [
@@ -520,6 +679,41 @@
                 formula: "20²+21²=841=29². MDC=1.",
                 explanation: "(20,21,29): MDC=1, primitivo. Os outros são múltiplos de ternos menores (7-24-25, 3-4-5, 3-4-5).",
                 labels: ["Candidatos", "MDC", "Primitivo?"]
+            },
+            {
+                title: "Ternos 3 – Gerando um Primitivo",
+                statement: "Use m=5, n=2 (coprimos, paridades diferentes) para gerar um terno pitagórico primitivo. Qual é o cateto ímpar?",
+                options: ["21", "20", "29", "25"],
+                correct: 0,
+                hint: "a = m² - n² = 25 - 4 = 21.",
+                formula: "a=21, b=20, c=29.",
+                explanation: "Com m=5, n=2: a = 25-4 = 21; b = 2·5·2 = 20; c = 25+4 = 29. O cateto ímpar é 21. Esse terno é primitivo porque m e n são coprimos e de paridades diferentes.",
+                labels: ["m=5, n=2", "Fórmula", "Cateto ímpar"]
+            },
+            {
+                title: "Ternos 4 – Verificação Rápida",
+                statement: "Qual das triplas abaixo NÃO é um terno pitagórico?",
+                options: ["(9,12,15)", "(7,24,25)", "(10,24,26)", "(5,11,13)"],
+                correct: 3,
+                hint: "Verifique a² + b² = c² para cada.",
+                formula: "5²+11²=25+121=146 ≠ 169, logo não é.",
+                explanation: "Para (5,11,13): 25+121=146, mas 13²=169. Portanto, não satisfaz Pitágoras. As demais são ternos válidos.",
+                labels: ["Candidatos", "Verificar", "Não terno"]
+            },
+            {
+                title: "Ternos 5 – Propriedade",
+                statement: "Em um terno pitagórico primitivo, sempre:",
+                options: [
+                    "Exatamente um cateto é par",
+                    "Ambos os catetos são pares",
+                    "A hipotenusa é par",
+                    "Todos os números são ímpares"
+                ],
+                correct: 0,
+                hint: "Lembre da fórmula de Euclides: b = 2mn é par.",
+                formula: "Na fórmula, b é 2mn (par), e a = m²-n² é ímpar se m,n têm paridades opostas.",
+                explanation: "Para ternos primitivos gerados por Euclides, o cateto b = 2mn é sempre par, enquanto a = m² - n² é ímpar (pois m e n têm paridades diferentes). A hipotenusa c = m² + n² é ímpar. Portanto, exatamente um cateto é par.",
+                labels: ["Propriedade", "Primitivo", "Qual é verdade?"]
             }
         ],
         6: [
@@ -542,6 +736,88 @@
                 formula: "64 > 25+36=61 → obtusângulo.",
                 explanation: "Maior lado 8²=64. 5²+6²=61. Como 64 > 61, ângulo oposto > 90° → obtusângulo.",
                 labels: ["Lados: 5,6,8", "8² vs 5²+6²", "Tipo"]
+            },
+            {
+                title: "Lei dos Cossenos 3 – Triângulo Agudo",
+                statement: "Lados de um triângulo: 5, 7 e 8. Determine o cosseno do maior ângulo.",
+                options: ["cos = 1/7", "cos = -1/7", "cos = 1/5", "cos = 0"],
+                correct: 0,
+                hint: "Maior lado: 8. Use 8² = 5² + 7² - 2·5·7·cos(θ).",
+                formula: "64 = 25+49 - 70 cos → 64 = 74 - 70 cos → cos = 10/70 = 1/7.",
+                explanation: "Pela lei dos cossenos: 8² = 5²+7² - 2·5·7·cos(θ) → 64 = 74 - 70 cos → cos = 1/7. O cosseno é positivo, confirmando que o ângulo é agudo.",
+                labels: ["Lados: 5,7,8", "Maior lado: 8", "cos(θ)"]
+            },
+            {
+                title: "Lei dos Cossenos 4 – Diagonal do Paralelogramo",
+                statement: "Um paralelogramo tem lados 6 cm e 10 cm, com um ângulo de 60°. Qual é o comprimento da diagonal maior?",
+                options: ["14 cm", "√136 ≈ 11,66 cm", "√196 = 14 cm", "16 cm"],
+                correct: 0,
+                hint: "Diagonal maior: d² = 6² + 10² - 2·6·10·cos(120°). cos(120°) = -1/2.",
+                formula: "d² = 36+100 - 120·(-0,5) = 136+60 = 196 → d=14.",
+                explanation: "A diagonal maior opõe o ângulo de 120° (suplementar de 60°). d² = 36+100 - 120·(-0,5) = 136 + 60 = 196. d = 14 cm.",
+                labels: ["Lados: 6,10", "Ângulo: 60°", "Diagonal maior"]
+            },
+            {
+                title: "Lei dos Cossenos 5 – Recíproca",
+                statement: "Se em um triângulo a² > b² + c², então o triângulo é:",
+                options: ["Obtusângulo", "Retângulo", "Acutângulo", "Equilátero"],
+                correct: 0,
+                hint: "Compare com a lei dos cossenos: a² = b² + c² - 2bc cos(θ). Se a² > b²+c², então cos(θ) < 0.",
+                formula: "cos(θ) = (b²+c² - a²)/(2bc). Se a² > b²+c², cos < 0.",
+                explanation: "Da lei dos cossenos, cos(θ) = (b²+c² - a²)/(2bc). Se a² > b²+c², o numerador fica negativo, logo cos(θ) < 0, indicando ângulo obtuso (>90°).",
+                labels: ["Condição", "Recíproca", "Tipo"]
+            }
+        ],
+        8: [
+            {
+                title: "Tales 1 – Proporção Básica",
+                statement: "Retas r//s//t cortadas por transversais. Na primeira transversal, segmentos medem 3 e 5. Na segunda, o menor mede x e o maior 10. Determine x.",
+                options: ["6", "4", "8", "5"],
+                correct: 0,
+                hint: "3/5 = x/10.",
+                formula: "x = (3·10)/5 = 6.",
+                explanation: "Pelo Teorema de Tales, a razão entre os segmentos correspondentes é constante: 3/5 = x/10, logo x = 6.",
+                labels: ["3 e 5", "x e 10", "x?"]
+            },
+            {
+                title: "Tales 2 – Altura de Prédio",
+                statement: "Uma estaca de 2 m projeta sombra de 3 m no mesmo instante em que um prédio projeta sombra de 45 m. Qual a altura do prédio?",
+                options: ["30 m", "67,5 m", "22,5 m", "15 m"],
+                correct: 0,
+                hint: "Razão entre altura e sombra é constante. 2/3 = h/45.",
+                formula: "h = (2·45)/3 = 30 m.",
+                explanation: "Por semelhança de triângulos (raios solares paralelos), a razão altura/sombra é igual. 2/3 = h/45 → h = 90/3 = 30 m.",
+                labels: ["Estaca: 2 m", "Sombra estaca: 3 m", "Sombra prédio: 45 m"]
+            },
+            {
+                title: "Tales 3 – Divisão de Segmento",
+                statement: "Uma reta paralela a um lado de um triângulo divide os outros dois lados em segmentos proporcionais. Se os segmentos em um lado são 4 e 6, e no outro lado o segmento correspondente ao 4 é x e ao 6 é 9, quanto vale x?",
+                options: ["6", "4", "8", "12"],
+                correct: 0,
+                hint: "4/6 = x/9.",
+                formula: "x = (4·9)/6 = 6.",
+                explanation: "Pelo teorema fundamental da semelhança, 4/6 = x/9 → x = 36/6 = 6.",
+                labels: ["Segmentos: 4 e 6", "x e 9", "x?"]
+            },
+            {
+                title: "Tales 4 – Mapa e Escala",
+                statement: "Em um mapa, duas cidades distam 5 cm. A escala é 1:200.000. Qual a distância real em km?",
+                options: ["10 km", "1 km", "100 km", "20 km"],
+                correct: 0,
+                hint: "1 cm no mapa = 200.000 cm reais = 2 km. 5 cm = 10 km.",
+                formula: "Distância = 5 * 2 = 10 km.",
+                explanation: "Escala 1:200.000 significa que 1 cm = 200.000 cm = 2 km. Logo, 5 cm = 10 km.",
+                labels: ["Mapa: 5 cm", "Escala: 1:200.000", "Distância real"]
+            },
+            {
+                title: "Tales 5 – Feixe de Paralelas",
+                statement: "Três retas paralelas são cortadas por duas transversais. Na primeira transversal, os segmentos medem 2x, 3x e 5x. Na segunda, os segmentos correspondentes são 4, y e 10. Determine x e y.",
+                options: ["x=2, y=6", "x=1, y=3", "x=2, y=5", "x=3, y=6"],
+                correct: 0,
+                hint: "2x/4 = 3x/y = 5x/10.",
+                formula: "2x/4 = 5x/10 → x=2. 3·2/y = 5·2/10 → 6/y = 1 → y=6.",
+                explanation: "A razão é constante. Da última igualdade: 5x/10 = x/2 → mas 2x/4 = x/2 também. Então x/2 = 1? Na verdade, igualando 2x/4 = 5x/10 → x/2 = x/2 (identidade). Precisamos de valores absolutos. Se 5x/10 = 1 → 5x=10 → x=2. Depois 2x/4 = 2·2/4=1, e 3x/y=6/y=1 → y=6.",
+                labels: ["Segmentos: 2x,3x,5x", "4,y,10", "x,y"]
             }
         ]
     };
@@ -555,24 +831,18 @@
         const m = splitX - startX, n = endX - splitX;
         const h = Math.sqrt(m * n);
         const yTop = yBase - h;
-
         document.getElementById('poly-main').setAttribute('points', `${startX},${yBase} ${endX},${yBase} ${splitX},${yTop}`);
-        document.getElementById('line-h').setAttribute('x1', splitX);
-        document.getElementById('line-h').setAttribute('y1', yTop);
-        document.getElementById('line-h').setAttribute('x2', splitX);
-        document.getElementById('line-h').setAttribute('y2', yBase);
-
+        document.getElementById('line-h').setAttribute('x1', splitX); document.getElementById('line-h').setAttribute('y1', yTop);
+        document.getElementById('line-h').setAttribute('x2', splitX); document.getElementById('line-h').setAttribute('y2', yBase);
         const scaleA = 15, scaleM = (m/totalWidth)*scaleA, scaleN = (n/totalWidth)*scaleA;
         const scaleH = Math.sqrt(scaleM * scaleN);
         const scaleB = Math.sqrt(scaleM * scaleA), scaleC = Math.sqrt(scaleN * scaleA);
-
         document.getElementById('label-b').textContent = `b = ${scaleB.toFixed(1)}`;
         document.getElementById('label-c').textContent = `c = ${scaleC.toFixed(1)}`;
         document.getElementById('label-a').textContent = `a = ${scaleA}`;
         document.getElementById('label-h').textContent = `h = ${scaleH.toFixed(1)}`;
         document.getElementById('label-m').textContent = `m = ${scaleM.toFixed(1)}`;
         document.getElementById('label-n').textContent = `n = ${scaleN.toFixed(1)}`;
-
         document.getElementById('pythagoras-check').textContent = `${scaleB.toFixed(1)}² + ${scaleC.toFixed(1)}² = ${scaleA}²`;
         document.getElementById('calc-tezao').innerHTML = `${scaleA} × ${scaleH.toFixed(1)} = ${scaleB.toFixed(1)} × ${scaleC.toFixed(1)} <br><span class="text-indigo-600 font-semibold">(${(scaleA*scaleH).toFixed(1)} = ${(scaleB*scaleC).toFixed(1)})</span>`;
         document.getElementById('calc-tezinho').innerHTML = `${scaleH.toFixed(1)}² = ${scaleM.toFixed(1)} × ${scaleN.toFixed(1)} <br><span class="text-indigo-600 font-semibold">(${(scaleH*scaleH).toFixed(1)} = ${(scaleM*scaleN).toFixed(1)})</span>`;
@@ -595,7 +865,6 @@
             updateTriangle(val);
         }
     }
-
     function reviewInLab() {
         switchModule(1);
         setTimeout(applyQuestionDataToSandbox, 100);
@@ -611,17 +880,18 @@
         currentModule = moduleId;
         document.querySelectorAll('.module-content').forEach(el => el.classList.add('hidden'));
         document.getElementById(`module-${moduleId}`).classList.remove('hidden');
-
         document.querySelectorAll('.module-btn').forEach(btn => {
             const mod = parseInt(btn.dataset.module);
             btn.classList.remove('active');
             if (mod === moduleId) btn.classList.add('active');
             btn.classList.toggle('locked', xp < (mod-1)*25 && mod > 2);
         });
-
         if (moduleId === 2) renderMod2Quiz();
-        if ([3,4,5,6].includes(moduleId)) renderGenericQuiz(moduleId);
-        if (moduleId === 7) renderDemonstrations();
+        if ([3,4,5,6,8].includes(moduleId)) renderGenericQuiz(moduleId);
+        if (moduleId === 4) setTimeout(initTrigCircle, 100);
+        if (moduleId === 5) setTimeout(initTernosGenerator, 100);
+        if (moduleId === 7) initBhaskara();
+        if (moduleId === 8) initTales();
         lucide.createIcons();
     }
 
@@ -635,7 +905,6 @@
         document.getElementById('mod2-q-val-1').textContent = q.labels[0];
         document.getElementById('mod2-q-val-2').textContent = q.labels[1];
         document.getElementById('mod2-q-val-3').textContent = q.labels[2];
-
         const opts = document.getElementById('mod2-quiz-options');
         opts.innerHTML = '';
         q.options.forEach((opt, idx) => {
@@ -660,6 +929,7 @@
         } else {
             fb.className = "mt-6 p-4 rounded-xl border border-rose-200 bg-rose-50 flex flex-col gap-2";
             fb.innerHTML = `<p class="font-bold text-rose-700">❌ Atenção!</p><p class="text-xs">${q.hint}</p><p class="text-xs">${q.explanation}</p>`;
+            saveMistake(2, currentQuestionIndex[2]);
         }
         const nextBtn = document.createElement('button');
         nextBtn.className = "mt-2 py-2 px-4 bg-indigo-600 text-white rounded-lg text-xs self-start font-bold";
@@ -669,19 +939,18 @@
             renderMod2Quiz();
         };
         fb.appendChild(nextBtn);
-
         const revBtn = document.createElement('button');
         revBtn.className = "mt-1 py-2 px-4 bg-amber-600 text-white rounded-lg text-xs self-start font-bold";
         revBtn.innerText = "🔬 Revisar no Laboratório";
         revBtn.onclick = reviewInLab;
         fb.appendChild(revBtn);
-
         document.getElementById('module-2-progress').textContent = `Questões respondidas: ${questionsAnsweredMod2}`;
         document.getElementById('module-2-progress-bar').style.width = `${(questionsAnsweredMod2/questionBank[2].length)*100}%`;
     }
 
     function renderGenericQuiz(moduleId) {
         const container = document.getElementById(`mod${moduleId}-quiz-container`);
+        if (!container || !questionBank[moduleId]) return;
         const q = questionBank[moduleId][currentQuestionIndex[moduleId]];
         container.innerHTML = `
             <h3 class="font-bold text-lg mb-2">${q.title}</h3>
@@ -722,39 +991,186 @@
         fb.appendChild(nextBtn);
     }
 
-    function renderDemonstrations() {
-        document.getElementById('demo-cards').innerHTML = `
-            <div class="p-5 border rounded-xl bg-indigo-50">
-                <h3 class="font-bold text-lg">📐 Bhaskara (séc. XII)</h3>
-                <p class="text-sm mt-2">Quatro triângulos retângulos dentro de um quadrado de lado c. Área total: c² = 4·(ab/2) + (b-a)² = a² + b².</p>
-            </div>
-            <div class="p-5 border rounded-xl bg-amber-50">
-                <h3 class="font-bold text-lg">📏 Semelhança (Euclides)</h3>
-                <p class="text-sm mt-2">A altura divide o triângulo original em dois triângulos semelhantes, gerando as relações métricas.</p>
-            </div>
-            <div class="p-5 border rounded-xl bg-emerald-50">
-                <h3 class="font-bold text-lg">🧩 Perigal (dissecação)</h3>
-                <p class="text-sm mt-2">Recortando o quadrado maior e os dois menores, é possível rearranjar as peças para provar a igualdade de áreas.</p>
-            </div>
-            <div class="p-5 border rounded-xl bg-rose-50">
-                <h3 class="font-bold text-lg">🎨 Leonardo da Vinci</h3>
-                <p class="text-sm mt-2">Usa simetria e congruência de triângulos e hexágonos para demonstrar o teorema.</p>
-            </div>
-        `;
+    // ==================== SISTEMA DE REVISÃO DE ERROS ====================
+    function getMistakes() {
+        try { return JSON.parse(localStorage.getItem('curiometrics_mistakes') || '[]'); } catch(e) { return []; }
+    }
+    function saveMistake(moduleId, questionIndex) {
+        const mistakes = getMistakes();
+        if (!mistakes.find(m => m.module === moduleId && m.index === questionIndex)) {
+            mistakes.push({ module: moduleId, index: questionIndex });
+            localStorage.setItem('curiometrics_mistakes', JSON.stringify(mistakes));
+        }
+    }
+    function reviewMistakes() {
+        const mistakes = getMistakes();
+        if (mistakes.length === 0) {
+            alert("🎉 Você ainda não errou nenhuma questão! Continue assim.");
+            return;
+        }
+        const mod2mistakes = mistakes.filter(m => m.module === 2).map(m => m.index);
+        if (mod2mistakes.length === 0) {
+            alert("Nenhum erro no módulo 2. Tente revisar outros módulos.");
+            return;
+        }
+        // Cria um quiz rápido só com as erradas do módulo 2
+        currentQuestionIndex[2] = mod2mistakes[0];
+        renderMod2Quiz();
+        alert(`Revisando ${mod2mistakes.length} questão(ões) errada(s) do módulo 2.`);
     }
 
-    // ==================== PROGRESSÃO DE XP E AUTOAVALIAÇÃO ====================
+    // ==================== COMPONENTES INTERATIVOS ====================
+    // Círculo trigonométrico (Módulo 4)
+    function initTrigCircle() {
+        const svg = document.getElementById('unit-circle');
+        if (!svg) return;
+        const point = document.getElementById('point-p');
+        let dragging = false;
+        function updateFromXY(x, y) {
+            let angle = Math.atan2(-y, x);
+            if (angle < 0) angle += 2*Math.PI;
+            const deg = (angle * 180 / Math.PI).toFixed(1);
+            const radius = 100;
+            const px = radius * Math.cos(angle);
+            const py = -radius * Math.sin(angle);
+            point.setAttribute('cx', px); point.setAttribute('cy', py);
+            document.getElementById('radius-line').setAttribute('x2', px);
+            document.getElementById('radius-line').setAttribute('y2', py);
+            document.getElementById('proj-sen').setAttribute('x1', px);
+            document.getElementById('proj-sen').setAttribute('y1', py);
+            document.getElementById('proj-sen').setAttribute('x2', px);
+            document.getElementById('proj-sen').setAttribute('y2', 0);
+            document.getElementById('proj-cos').setAttribute('x1', px);
+            document.getElementById('proj-cos').setAttribute('y1', py);
+            document.getElementById('proj-cos').setAttribute('x2', 0);
+            document.getElementById('proj-cos').setAttribute('y2', py);
+            const seno = Math.sin(angle).toFixed(3);
+            const coss = Math.cos(angle).toFixed(3);
+            const tang = (Math.abs(coss) > 0.001 ? (seno/coss).toFixed(3) : '∞');
+            document.getElementById('sen-val').textContent = seno;
+            document.getElementById('cos-val').textContent = coss;
+            document.getElementById('tg-val').textContent = tang;
+            document.getElementById('angle-val').textContent = deg + '°';
+            document.getElementById('label-sen').setAttribute('x', px + 5);
+            document.getElementById('label-sen').setAttribute('y', py/2);
+            document.getElementById('label-cos').setAttribute('x', px/2);
+            document.getElementById('label-cos').setAttribute('y', py - 10);
+        }
+        function onMouseMove(e) {
+            if (!dragging) return;
+            const rect = svg.getBoundingClientRect();
+            const centerX = rect.left + rect.width/2;
+            const centerY = rect.top + rect.height/2;
+            updateFromXY(e.clientX - centerX, e.clientY - centerY);
+        }
+        point.addEventListener('mousedown', () => { dragging = true; });
+        window.addEventListener('mousemove', onMouseMove);
+        window.addEventListener('mouseup', () => { dragging = false; });
+        point.addEventListener('touchstart', e => { e.preventDefault(); dragging = true; });
+        window.addEventListener('touchmove', e => {
+            if (!dragging) return;
+            const rect = svg.getBoundingClientRect();
+            const centerX = rect.left + rect.width/2;
+            const centerY = rect.top + rect.height/2;
+            updateFromXY(e.touches[0].clientX - centerX, e.touches[0].clientY - centerY);
+        });
+        window.addEventListener('touchend', () => { dragging = false; });
+        updateFromXY(70.7, -70.7);
+    }
+
+    // Gerador de ternos (Módulo 5)
+    function initTernosGenerator() {
+        const sliderM = document.getElementById('slider-m');
+        const sliderN = document.getElementById('slider-n');
+        if (!sliderM || !sliderN) return;
+        function updateTernos() {
+            let m = parseInt(sliderM.value);
+            let n = parseInt(sliderN.value);
+            if (n >= m) { sliderN.value = m-1; n = m-1; }
+            document.getElementById('val-m').textContent = m;
+            document.getElementById('val-n').textContent = n;
+            const a = m*m - n*n, b = 2*m*n, c = m*m + n*n;
+            document.getElementById('terno-gerado').textContent = `(${a}, ${b}, ${c})`;
+            const svg = document.getElementById('ternos-sandbox');
+            const maxDim = 180, margin = 10, scale = maxDim / c;
+            const bScaled = b * scale, aScaled = a * scale;
+            const pts = `10,${10 + aScaled} ${10 + bScaled},${10 + aScaled} 10,10`;
+            document.getElementById('ternos-tri').setAttribute('points', pts);
+            document.getElementById('ternos-label-b').setAttribute('x', 10 + bScaled/2 - 5);
+            document.getElementById('ternos-label-b').setAttribute('y', 10 + aScaled + 15);
+            document.getElementById('ternos-label-c').setAttribute('x', 10 + bScaled + 5);
+            document.getElementById('ternos-label-c').setAttribute('y', 10 + aScaled/2);
+            document.getElementById('ternos-label-a').setAttribute('x', 10 + bScaled/2);
+            document.getElementById('ternos-label-a').setAttribute('y', 10 + aScaled + 15);
+        }
+        sliderM.addEventListener('input', updateTernos);
+        sliderN.addEventListener('input', updateTernos);
+        updateTernos();
+    }
+
+    // Bhaskara (Módulo 7)
+    function initBhaskara() {
+        const sliderB = document.getElementById('bhaskara-slider');
+        if (!sliderB) return;
+        function update(t) {
+            const ratio = t / 100;
+            document.getElementById('big-square').setAttribute('opacity', 1 - ratio);
+            document.getElementById('new-square').setAttribute('width', 120 * ratio);
+            document.getElementById('new-square').setAttribute('height', 120 * ratio);
+            document.getElementById('new-square').setAttribute('x', 260);
+            document.getElementById('new-square').setAttribute('y', 20 + (120 - 120*ratio)/2);
+            document.getElementById('bhaskara-fase').textContent = t < 50 ? `${t}% (quadrado original)` : `${t}% (rearranjado)`;
+        }
+        sliderB.addEventListener('input', e => update(parseInt(e.target.value)));
+        update(0);
+    }
+
+    // Tales (Módulo 8)
+    function initTales() {
+        const svg = document.getElementById('tales-svg');
+        if (!svg) return;
+        const transv1 = document.getElementById('transv1');
+        const transv2 = document.getElementById('transv2');
+        function updateTales() {
+            const p1 = parseInt(document.getElementById('tales-slider1').value);
+            const p2 = parseInt(document.getElementById('tales-slider2').value);
+            const x1_1 = 50 + p1 * 1.5, x1_2 = x1_1 + 120;
+            const x2_1 = 50 + p2 * 1.5, x2_2 = x2_1 + 120;
+            transv1.setAttribute('x1', x1_1); transv1.setAttribute('y1', 10);
+            transv1.setAttribute('x2', x1_2); transv1.setAttribute('y2', 230);
+            transv2.setAttribute('x1', x2_1); transv2.setAttribute('y1', 10);
+            transv2.setAttribute('x2', x2_2); transv2.setAttribute('y2', 230);
+            function intersect(x1,y1,x2,y2, yTarget) {
+                const t = (yTarget - y1) / (y2 - y1);
+                return x1 + t * (x2 - x1);
+            }
+            const yLevels = [30, 100, 170];
+            const pts1 = yLevels.map(y => intersect(x1_1,10,x1_2,230,y));
+            const pts2 = yLevels.map(y => intersect(x2_1,10,x2_2,230,y));
+            const AB = Math.hypot(pts1[1]-pts1[0], 60);
+            const BC = Math.hypot(pts1[2]-pts1[1], 70);
+            const DE = Math.hypot(pts2[1]-pts2[0], 60);
+            const EF = Math.hypot(pts2[2]-pts2[1], 70);
+            document.getElementById('tales-ratio1').textContent = (AB / BC).toFixed(2);
+            document.getElementById('tales-ratio2').textContent = (DE / EF).toFixed(2);
+        }
+        document.getElementById('tales-slider1').addEventListener('input', updateTales);
+        document.getElementById('tales-slider2').addEventListener('input', updateTales);
+        updateTales();
+    }
+
+    // ==================== XP E AUTOAVALIAÇÃO ====================
     function updateXPDisplay() {
         document.getElementById('header-xp').textContent = xp;
         let nivel = 1;
-        if (xp >= 150) nivel = 7;
+        if (xp >= 175) nivel = 8;
+        else if (xp >= 150) nivel = 7;
         else if (xp >= 125) nivel = 6;
         else if (xp >= 100) nivel = 5;
         else if (xp >= 75) nivel = 4;
         else if (xp >= 50) nivel = 3;
         else if (xp >= 25) nivel = 2;
         document.getElementById('header-level').textContent = `Nível ${nivel}`;
-        // Atualizar bloqueios visuais
         document.querySelectorAll('.module-btn').forEach(btn => {
             const mod = parseInt(btn.dataset.module);
             btn.classList.toggle('locked', xp < (mod-1)*25 && mod > 2);
