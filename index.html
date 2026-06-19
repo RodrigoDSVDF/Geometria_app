@@ -4,10 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CurióMetrics | Pitágoras & Geometria Euclidiana</title>
-    <script src="https://cdn.tailwindcss.com">
-    </script>
-    <script src="https://unpkg.com/lucide@latest">
-    </script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
         body {
@@ -443,7 +441,7 @@
 
     // ==================== BANCOS DE QUESTÕES ====================
     const questionBank = {
-        2: [
+        "2": [
             {
                 title: "Treino 1 – O Triângulo Perfeito",
                 statement: "Dado um triângulo retângulo com catetos b = 8 e c = 6, encontre as projeções m, n e a altura H.",
@@ -555,7 +553,7 @@
                 triangleData: { a:4, b:2*Math.sqrt(2), c:2*Math.sqrt(2) }
             }
         ],
-        3: [
+        "3": [
             {
                 title: "Semelhança 1 – Os Três Triângulos",
                 statement: "No triângulo retângulo ABC (reto em A), traça-se a altura AH. Os triângulos ABH, AHC e ABC são semelhantes. Se AB=6, AC=8, qual a razão de semelhança entre ABH e ABC?",
@@ -607,7 +605,7 @@
                 labels: ["Escada: 5 m", "Base: 3 m", "Achar: altura, cos(θ)"]
             }
         ],
-        4: [
+        "4": [
             {
                 title: "Trigonometria 1 – Ângulo de Elevação",
                 statement: "Uma pessoa vê o topo de um prédio sob ângulo de 30°, a 40 m do prédio. Altura? (Use √3 ≈ 1.73)",
@@ -659,7 +657,7 @@
                 labels: ["tg = 0,08", "Altura: 0,80 m", "Comprimento"]
             }
         ],
-        5: [
+        "5": [
             {
                 title: "Ternos 1 – Gerando com Euclides",
                 statement: "Use m=3, n=1 na fórmula de Euclides. Qual terno é gerado?",
@@ -716,7 +714,7 @@
                 labels: ["Propriedade", "Primitivo", "Qual é verdade?"]
             }
         ],
-        6: [
+        "6": [
             {
                 title: "Lei dos Cossenos 1 – Triângulo Oblíquo",
                 statement: "Dois lados medem 7 e 9, ângulo entre eles 60°. Qual o terceiro lado?",
@@ -768,7 +766,7 @@
                 labels: ["Condição", "Recíproca", "Tipo"]
             }
         ],
-        8: [
+        "8": [
             {
                 title: "Tales 1 – Proporção Básica",
                 statement: "Retas r//s//t cortadas por transversais. Na primeira transversal, segmentos medem 3 e 5. Na segunda, o menor mede x e o maior 10. Determine x.",
@@ -815,8 +813,8 @@
                 options: ["x=2, y=6", "x=1, y=3", "x=2, y=5", "x=3, y=6"],
                 correct: 0,
                 hint: "2x/4 = 3x/y = 5x/10.",
-                formula: "2x/4 = 5x/10 → x=2. 3·2/y = 5·2/10 → 6/y = 1 → y=6.",
-                explanation: "A razão é constante. Da última igualdade: 5x/10 = x/2 → mas 2x/4 = x/2 também. Então x/2 = 1? Na verdade, igualando 2x/4 = 5x/10 → x/2 = x/2 (identidade). Precisamos de valores absolutos. Se 5x/10 = 1 → 5x=10 → x=2. Depois 2x/4 = 2·2/4=1, e 3x/y=6/y=1 → y=6.",
+                formula: "2x/4 = 5x/10 → x/2 = x/2. Igualando 5x/10 = 1 → 5x=10 → x=2. 2x/4 = 1, então 3x/y = 1 → 6/y = 1 → y=6.",
+                explanation: "A razão é constante: 5x/10 = 1 → x=2. Depois 2x/4 = 1 e 3x/y = 6/y = 1 → y=6.",
                 labels: ["Segmentos: 2x,3x,5x", "4,y,10", "x,y"]
             }
         ]
@@ -854,7 +852,7 @@
     slider.addEventListener('input', e => updateTriangle(e.target.value));
 
     function applyQuestionDataToSandbox() {
-        const q = questionBank[2]?.[currentQuestionIndex[2]];
+        const q = questionBank["2"]?.[currentQuestionIndex[2]];
         if (q?.triangleData?.b && q?.triangleData?.c) {
             const b = q.triangleData.b, c = q.triangleData.c;
             if (c === 0) return;
@@ -872,35 +870,48 @@
 
     // ==================== TROCA DE MÓDULOS ====================
     function switchModule(moduleId) {
-        const requiredXP = (moduleId - 1) * 25;
-        if (xp < requiredXP && moduleId > 2) {
-            alert(`🔒 Módulo bloqueado! Você precisa de ${requiredXP} XP para acessá-lo. Continue treinando!`);
-            return;
+        try {
+            const requiredXP = (moduleId - 1) * 25;
+            if (xp < requiredXP && moduleId > 2) {
+                alert(`🔒 Módulo bloqueado! Você precisa de ${requiredXP} XP para acessá-lo. Continue treinando!`);
+                return;
+            }
+            currentModule = moduleId;
+            document.querySelectorAll('.module-content').forEach(el => el.classList.add('hidden'));
+            const target = document.getElementById(`module-${moduleId}`);
+            if (!target) {
+                console.error(`Módulo ${moduleId} não encontrado.`);
+                return;
+            }
+            target.classList.remove('hidden');
+            
+            document.querySelectorAll('.module-btn').forEach(btn => {
+                const mod = parseInt(btn.dataset.module);
+                btn.classList.remove('active');
+                if (mod === moduleId) btn.classList.add('active');
+                btn.classList.toggle('locked', xp < (mod-1)*25 && mod > 2);
+            });
+
+            if (moduleId === 2) renderMod2Quiz();
+            if ([3,4,5,6,8].includes(moduleId)) renderGenericQuiz(moduleId);
+            if (moduleId === 4) setTimeout(initTrigCircle, 100);
+            if (moduleId === 5) setTimeout(initTernosGenerator, 100);
+            if (moduleId === 7) initBhaskara();
+            if (moduleId === 8) initTales();
+            lucide.createIcons();
+        } catch (error) {
+            console.error('Erro ao trocar de módulo:', error);
+            alert('Ocorreu um erro ao carregar o módulo. Recarregue a página.');
         }
-        currentModule = moduleId;
-        document.querySelectorAll('.module-content').forEach(el => el.classList.add('hidden'));
-        document.getElementById(`module-${moduleId}`).classList.remove('hidden');
-        document.querySelectorAll('.module-btn').forEach(btn => {
-            const mod = parseInt(btn.dataset.module);
-            btn.classList.remove('active');
-            if (mod === moduleId) btn.classList.add('active');
-            btn.classList.toggle('locked', xp < (mod-1)*25 && mod > 2);
-        });
-        if (moduleId === 2) renderMod2Quiz();
-        if ([3,4,5,6,8].includes(moduleId)) renderGenericQuiz(moduleId);
-        if (moduleId === 4) setTimeout(initTrigCircle, 100);
-        if (moduleId === 5) setTimeout(initTernosGenerator, 100);
-        if (moduleId === 7) initBhaskara();
-        if (moduleId === 8) initTales();
-        lucide.createIcons();
     }
 
     // ==================== RENDERIZAÇÃO DE QUIZ ====================
     function renderMod2Quiz() {
-        const q = questionBank[2][currentQuestionIndex[2]];
+        const q = questionBank["2"]?.[currentQuestionIndex[2]];
+        if (!q) return;
         document.getElementById('mod2-question-level').textContent = q.title;
         document.getElementById('mod2-question-title').textContent = "Bizu do Curió em Ação";
-        document.getElementById('mod2-question-counter').textContent = `Questão ${currentQuestionIndex[2]+1} de ${questionBank[2].length}`;
+        document.getElementById('mod2-question-counter').textContent = `Questão ${currentQuestionIndex[2]+1} de ${questionBank["2"].length}`;
         document.getElementById('mod2-question-statement').textContent = q.statement;
         document.getElementById('mod2-q-val-1').textContent = q.labels[0];
         document.getElementById('mod2-q-val-2').textContent = q.labels[1];
@@ -918,7 +929,8 @@
     }
 
     function selectMod2Option(idx) {
-        const q = questionBank[2][currentQuestionIndex[2]];
+        const q = questionBank["2"]?.[currentQuestionIndex[2]];
+        if (!q) return;
         const fb = document.getElementById('mod2-quiz-feedback');
         fb.classList.remove('hidden');
         if (idx === q.correct) {
@@ -935,7 +947,7 @@
         nextBtn.className = "mt-2 py-2 px-4 bg-indigo-600 text-white rounded-lg text-xs self-start font-bold";
         nextBtn.innerText = "Próxima Questão";
         nextBtn.onclick = () => {
-            currentQuestionIndex[2] = (currentQuestionIndex[2] + 1) % questionBank[2].length;
+            currentQuestionIndex[2] = (currentQuestionIndex[2] + 1) % questionBank["2"].length;
             renderMod2Quiz();
         };
         fb.appendChild(nextBtn);
@@ -945,17 +957,19 @@
         revBtn.onclick = reviewInLab;
         fb.appendChild(revBtn);
         document.getElementById('module-2-progress').textContent = `Questões respondidas: ${questionsAnsweredMod2}`;
-        document.getElementById('module-2-progress-bar').style.width = `${(questionsAnsweredMod2/questionBank[2].length)*100}%`;
+        document.getElementById('module-2-progress-bar').style.width = `${(questionsAnsweredMod2/questionBank["2"].length)*100}%`;
     }
 
     function renderGenericQuiz(moduleId) {
         const container = document.getElementById(`mod${moduleId}-quiz-container`);
-        if (!container || !questionBank[moduleId]) return;
-        const q = questionBank[moduleId][currentQuestionIndex[moduleId]];
+        const moduleQuestions = questionBank[String(moduleId)];
+        if (!container || !moduleQuestions) return;
+        const q = moduleQuestions[currentQuestionIndex[moduleId]];
+        if (!q) return;
         container.innerHTML = `
             <h3 class="font-bold text-lg mb-2">${q.title}</h3>
             <p class="text-sm mb-3">${q.statement}</p>
-            <p class="text-xs text-slate-400">Questão ${currentQuestionIndex[moduleId]+1} de ${questionBank[moduleId].length}</p>
+            <p class="text-xs text-slate-400">Questão ${currentQuestionIndex[moduleId]+1} de ${moduleQuestions.length}</p>
             <div class="space-y-2 mt-3" id="generic-options-${moduleId}"></div>
             <div id="generic-feedback-${moduleId}" class="hidden mt-4 p-3 rounded-xl border"></div>
         `;
@@ -970,8 +984,12 @@
     }
 
     function selectGenericOption(moduleId, idx) {
-        const q = questionBank[moduleId][currentQuestionIndex[moduleId]];
+        const moduleQuestions = questionBank[String(moduleId)];
+        if (!moduleQuestions) return;
+        const q = moduleQuestions[currentQuestionIndex[moduleId]];
+        if (!q) return;
         const fb = document.getElementById(`generic-feedback-${moduleId}`);
+        if (!fb) return;
         fb.classList.remove('hidden');
         if (idx === q.correct) {
             fb.className = "mt-4 p-3 rounded-xl border border-emerald-200 bg-emerald-50";
@@ -985,7 +1003,7 @@
         nextBtn.className = "mt-2 py-1.5 px-3 bg-indigo-600 text-white rounded-lg text-xs font-bold";
         nextBtn.innerText = "Próxima";
         nextBtn.onclick = () => {
-            currentQuestionIndex[moduleId] = (currentQuestionIndex[moduleId] + 1) % questionBank[moduleId].length;
+            currentQuestionIndex[moduleId] = (currentQuestionIndex[moduleId] + 1) % moduleQuestions.length;
             renderGenericQuiz(moduleId);
         };
         fb.appendChild(nextBtn);
@@ -1013,150 +1031,153 @@
             alert("Nenhum erro no módulo 2. Tente revisar outros módulos.");
             return;
         }
-        // Cria um quiz rápido só com as erradas do módulo 2
         currentQuestionIndex[2] = mod2mistakes[0];
         renderMod2Quiz();
         alert(`Revisando ${mod2mistakes.length} questão(ões) errada(s) do módulo 2.`);
     }
 
     // ==================== COMPONENTES INTERATIVOS ====================
-    // Círculo trigonométrico (Módulo 4)
     function initTrigCircle() {
-        const svg = document.getElementById('unit-circle');
-        if (!svg) return;
-        const point = document.getElementById('point-p');
-        let dragging = false;
-        function updateFromXY(x, y) {
-            let angle = Math.atan2(-y, x);
-            if (angle < 0) angle += 2*Math.PI;
-            const deg = (angle * 180 / Math.PI).toFixed(1);
-            const radius = 100;
-            const px = radius * Math.cos(angle);
-            const py = -radius * Math.sin(angle);
-            point.setAttribute('cx', px); point.setAttribute('cy', py);
-            document.getElementById('radius-line').setAttribute('x2', px);
-            document.getElementById('radius-line').setAttribute('y2', py);
-            document.getElementById('proj-sen').setAttribute('x1', px);
-            document.getElementById('proj-sen').setAttribute('y1', py);
-            document.getElementById('proj-sen').setAttribute('x2', px);
-            document.getElementById('proj-sen').setAttribute('y2', 0);
-            document.getElementById('proj-cos').setAttribute('x1', px);
-            document.getElementById('proj-cos').setAttribute('y1', py);
-            document.getElementById('proj-cos').setAttribute('x2', 0);
-            document.getElementById('proj-cos').setAttribute('y2', py);
-            const seno = Math.sin(angle).toFixed(3);
-            const coss = Math.cos(angle).toFixed(3);
-            const tang = (Math.abs(coss) > 0.001 ? (seno/coss).toFixed(3) : '∞');
-            document.getElementById('sen-val').textContent = seno;
-            document.getElementById('cos-val').textContent = coss;
-            document.getElementById('tg-val').textContent = tang;
-            document.getElementById('angle-val').textContent = deg + '°';
-            document.getElementById('label-sen').setAttribute('x', px + 5);
-            document.getElementById('label-sen').setAttribute('y', py/2);
-            document.getElementById('label-cos').setAttribute('x', px/2);
-            document.getElementById('label-cos').setAttribute('y', py - 10);
-        }
-        function onMouseMove(e) {
-            if (!dragging) return;
-            const rect = svg.getBoundingClientRect();
-            const centerX = rect.left + rect.width/2;
-            const centerY = rect.top + rect.height/2;
-            updateFromXY(e.clientX - centerX, e.clientY - centerY);
-        }
-        point.addEventListener('mousedown', () => { dragging = true; });
-        window.addEventListener('mousemove', onMouseMove);
-        window.addEventListener('mouseup', () => { dragging = false; });
-        point.addEventListener('touchstart', e => { e.preventDefault(); dragging = true; });
-        window.addEventListener('touchmove', e => {
-            if (!dragging) return;
-            const rect = svg.getBoundingClientRect();
-            const centerX = rect.left + rect.width/2;
-            const centerY = rect.top + rect.height/2;
-            updateFromXY(e.touches[0].clientX - centerX, e.touches[0].clientY - centerY);
-        });
-        window.addEventListener('touchend', () => { dragging = false; });
-        updateFromXY(70.7, -70.7);
-    }
-
-    // Gerador de ternos (Módulo 5)
-    function initTernosGenerator() {
-        const sliderM = document.getElementById('slider-m');
-        const sliderN = document.getElementById('slider-n');
-        if (!sliderM || !sliderN) return;
-        function updateTernos() {
-            let m = parseInt(sliderM.value);
-            let n = parseInt(sliderN.value);
-            if (n >= m) { sliderN.value = m-1; n = m-1; }
-            document.getElementById('val-m').textContent = m;
-            document.getElementById('val-n').textContent = n;
-            const a = m*m - n*n, b = 2*m*n, c = m*m + n*n;
-            document.getElementById('terno-gerado').textContent = `(${a}, ${b}, ${c})`;
-            const svg = document.getElementById('ternos-sandbox');
-            const maxDim = 180, margin = 10, scale = maxDim / c;
-            const bScaled = b * scale, aScaled = a * scale;
-            const pts = `10,${10 + aScaled} ${10 + bScaled},${10 + aScaled} 10,10`;
-            document.getElementById('ternos-tri').setAttribute('points', pts);
-            document.getElementById('ternos-label-b').setAttribute('x', 10 + bScaled/2 - 5);
-            document.getElementById('ternos-label-b').setAttribute('y', 10 + aScaled + 15);
-            document.getElementById('ternos-label-c').setAttribute('x', 10 + bScaled + 5);
-            document.getElementById('ternos-label-c').setAttribute('y', 10 + aScaled/2);
-            document.getElementById('ternos-label-a').setAttribute('x', 10 + bScaled/2);
-            document.getElementById('ternos-label-a').setAttribute('y', 10 + aScaled + 15);
-        }
-        sliderM.addEventListener('input', updateTernos);
-        sliderN.addEventListener('input', updateTernos);
-        updateTernos();
-    }
-
-    // Bhaskara (Módulo 7)
-    function initBhaskara() {
-        const sliderB = document.getElementById('bhaskara-slider');
-        if (!sliderB) return;
-        function update(t) {
-            const ratio = t / 100;
-            document.getElementById('big-square').setAttribute('opacity', 1 - ratio);
-            document.getElementById('new-square').setAttribute('width', 120 * ratio);
-            document.getElementById('new-square').setAttribute('height', 120 * ratio);
-            document.getElementById('new-square').setAttribute('x', 260);
-            document.getElementById('new-square').setAttribute('y', 20 + (120 - 120*ratio)/2);
-            document.getElementById('bhaskara-fase').textContent = t < 50 ? `${t}% (quadrado original)` : `${t}% (rearranjado)`;
-        }
-        sliderB.addEventListener('input', e => update(parseInt(e.target.value)));
-        update(0);
-    }
-
-    // Tales (Módulo 8)
-    function initTales() {
-        const svg = document.getElementById('tales-svg');
-        if (!svg) return;
-        const transv1 = document.getElementById('transv1');
-        const transv2 = document.getElementById('transv2');
-        function updateTales() {
-            const p1 = parseInt(document.getElementById('tales-slider1').value);
-            const p2 = parseInt(document.getElementById('tales-slider2').value);
-            const x1_1 = 50 + p1 * 1.5, x1_2 = x1_1 + 120;
-            const x2_1 = 50 + p2 * 1.5, x2_2 = x2_1 + 120;
-            transv1.setAttribute('x1', x1_1); transv1.setAttribute('y1', 10);
-            transv1.setAttribute('x2', x1_2); transv1.setAttribute('y2', 230);
-            transv2.setAttribute('x1', x2_1); transv2.setAttribute('y1', 10);
-            transv2.setAttribute('x2', x2_2); transv2.setAttribute('y2', 230);
-            function intersect(x1,y1,x2,y2, yTarget) {
-                const t = (yTarget - y1) / (y2 - y1);
-                return x1 + t * (x2 - x1);
+        try {
+            const svg = document.getElementById('unit-circle');
+            if (!svg) return;
+            const point = document.getElementById('point-p');
+            let dragging = false;
+            function updateFromXY(x, y) {
+                let angle = Math.atan2(-y, x);
+                if (angle < 0) angle += 2*Math.PI;
+                const deg = (angle * 180 / Math.PI).toFixed(1);
+                const radius = 100;
+                const px = radius * Math.cos(angle);
+                const py = -radius * Math.sin(angle);
+                point.setAttribute('cx', px); point.setAttribute('cy', py);
+                document.getElementById('radius-line').setAttribute('x2', px);
+                document.getElementById('radius-line').setAttribute('y2', py);
+                document.getElementById('proj-sen').setAttribute('x1', px);
+                document.getElementById('proj-sen').setAttribute('y1', py);
+                document.getElementById('proj-sen').setAttribute('x2', px);
+                document.getElementById('proj-sen').setAttribute('y2', 0);
+                document.getElementById('proj-cos').setAttribute('x1', px);
+                document.getElementById('proj-cos').setAttribute('y1', py);
+                document.getElementById('proj-cos').setAttribute('x2', 0);
+                document.getElementById('proj-cos').setAttribute('y2', py);
+                const seno = Math.sin(angle).toFixed(3);
+                const coss = Math.cos(angle).toFixed(3);
+                const tang = (Math.abs(coss) > 0.001 ? (seno/coss).toFixed(3) : '∞');
+                document.getElementById('sen-val').textContent = seno;
+                document.getElementById('cos-val').textContent = coss;
+                document.getElementById('tg-val').textContent = tang;
+                document.getElementById('angle-val').textContent = deg + '°';
+                document.getElementById('label-sen').setAttribute('x', px + 5);
+                document.getElementById('label-sen').setAttribute('y', py/2);
+                document.getElementById('label-cos').setAttribute('x', px/2);
+                document.getElementById('label-cos').setAttribute('y', py - 10);
             }
-            const yLevels = [30, 100, 170];
-            const pts1 = yLevels.map(y => intersect(x1_1,10,x1_2,230,y));
-            const pts2 = yLevels.map(y => intersect(x2_1,10,x2_2,230,y));
-            const AB = Math.hypot(pts1[1]-pts1[0], 60);
-            const BC = Math.hypot(pts1[2]-pts1[1], 70);
-            const DE = Math.hypot(pts2[1]-pts2[0], 60);
-            const EF = Math.hypot(pts2[2]-pts2[1], 70);
-            document.getElementById('tales-ratio1').textContent = (AB / BC).toFixed(2);
-            document.getElementById('tales-ratio2').textContent = (DE / EF).toFixed(2);
-        }
-        document.getElementById('tales-slider1').addEventListener('input', updateTales);
-        document.getElementById('tales-slider2').addEventListener('input', updateTales);
-        updateTales();
+            function onMouseMove(e) {
+                if (!dragging) return;
+                const rect = svg.getBoundingClientRect();
+                const centerX = rect.left + rect.width/2;
+                const centerY = rect.top + rect.height/2;
+                updateFromXY(e.clientX - centerX, e.clientY - centerY);
+            }
+            point.addEventListener('mousedown', () => { dragging = true; });
+            window.addEventListener('mousemove', onMouseMove);
+            window.addEventListener('mouseup', () => { dragging = false; });
+            point.addEventListener('touchstart', e => { e.preventDefault(); dragging = true; });
+            window.addEventListener('touchmove', e => {
+                if (!dragging) return;
+                const rect = svg.getBoundingClientRect();
+                const centerX = rect.left + rect.width/2;
+                const centerY = rect.top + rect.height/2;
+                updateFromXY(e.touches[0].clientX - centerX, e.touches[0].clientY - centerY);
+            });
+            window.addEventListener('touchend', () => { dragging = false; });
+            updateFromXY(70.7, -70.7);
+        } catch(e) { console.error(e); }
+    }
+
+    function initTernosGenerator() {
+        try {
+            const sliderM = document.getElementById('slider-m');
+            const sliderN = document.getElementById('slider-n');
+            if (!sliderM || !sliderN) return;
+            function updateTernos() {
+                let m = parseInt(sliderM.value);
+                let n = parseInt(sliderN.value);
+                if (n >= m) { sliderN.value = m-1; n = m-1; }
+                document.getElementById('val-m').textContent = m;
+                document.getElementById('val-n').textContent = n;
+                const a = m*m - n*n, b = 2*m*n, c = m*m + n*n;
+                document.getElementById('terno-gerado').textContent = `(${a}, ${b}, ${c})`;
+                const svg = document.getElementById('ternos-sandbox');
+                const maxDim = 180, scale = maxDim / c;
+                const bScaled = b * scale, aScaled = a * scale;
+                const pts = `10,${10 + aScaled} ${10 + bScaled},${10 + aScaled} 10,10`;
+                document.getElementById('ternos-tri').setAttribute('points', pts);
+                document.getElementById('ternos-label-b').setAttribute('x', 10 + bScaled/2 - 5);
+                document.getElementById('ternos-label-b').setAttribute('y', 10 + aScaled + 15);
+                document.getElementById('ternos-label-c').setAttribute('x', 10 + bScaled + 5);
+                document.getElementById('ternos-label-c').setAttribute('y', 10 + aScaled/2);
+                document.getElementById('ternos-label-a').setAttribute('x', 10 + bScaled/2);
+                document.getElementById('ternos-label-a').setAttribute('y', 10 + aScaled + 15);
+            }
+            sliderM.addEventListener('input', updateTernos);
+            sliderN.addEventListener('input', updateTernos);
+            updateTernos();
+        } catch(e) { console.error(e); }
+    }
+
+    function initBhaskara() {
+        try {
+            const sliderB = document.getElementById('bhaskara-slider');
+            if (!sliderB) return;
+            function update(t) {
+                const ratio = t / 100;
+                document.getElementById('big-square').setAttribute('opacity', 1 - ratio);
+                document.getElementById('new-square').setAttribute('width', 120 * ratio);
+                document.getElementById('new-square').setAttribute('height', 120 * ratio);
+                document.getElementById('new-square').setAttribute('x', 260);
+                document.getElementById('new-square').setAttribute('y', 20 + (120 - 120*ratio)/2);
+                document.getElementById('bhaskara-fase').textContent = t < 50 ? `${t}% (quadrado original)` : `${t}% (rearranjado)`;
+            }
+            sliderB.addEventListener('input', e => update(parseInt(e.target.value)));
+            update(0);
+        } catch(e) { console.error(e); }
+    }
+
+    function initTales() {
+        try {
+            const svg = document.getElementById('tales-svg');
+            if (!svg) return;
+            const transv1 = document.getElementById('transv1');
+            const transv2 = document.getElementById('transv2');
+            function updateTales() {
+                const p1 = parseInt(document.getElementById('tales-slider1').value);
+                const p2 = parseInt(document.getElementById('tales-slider2').value);
+                const x1_1 = 50 + p1 * 1.5, x1_2 = x1_1 + 120;
+                const x2_1 = 50 + p2 * 1.5, x2_2 = x2_1 + 120;
+                transv1.setAttribute('x1', x1_1); transv1.setAttribute('y1', 10);
+                transv1.setAttribute('x2', x1_2); transv1.setAttribute('y2', 230);
+                transv2.setAttribute('x1', x2_1); transv2.setAttribute('y1', 10);
+                transv2.setAttribute('x2', x2_2); transv2.setAttribute('y2', 230);
+                function intersect(x1,y1,x2,y2, yTarget) {
+                    const t = (yTarget - y1) / (y2 - y1);
+                    return x1 + t * (x2 - x1);
+                }
+                const yLevels = [30, 100, 170];
+                const pts1 = yLevels.map(y => intersect(x1_1,10,x1_2,230,y));
+                const pts2 = yLevels.map(y => intersect(x2_1,10,x2_2,230,y));
+                const AB = Math.hypot(pts1[1]-pts1[0], 60);
+                const BC = Math.hypot(pts1[2]-pts1[1], 70);
+                const DE = Math.hypot(pts2[1]-pts2[0], 60);
+                const EF = Math.hypot(pts2[2]-pts2[1], 70);
+                document.getElementById('tales-ratio1').textContent = (AB / BC).toFixed(2);
+                document.getElementById('tales-ratio2').textContent = (DE / EF).toFixed(2);
+            }
+            document.getElementById('tales-slider1').addEventListener('input', updateTales);
+            document.getElementById('tales-slider2').addEventListener('input', updateTales);
+            updateTales();
+        } catch(e) { console.error(e); }
     }
 
     // ==================== XP E AUTOAVALIAÇÃO ====================
