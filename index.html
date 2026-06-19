@@ -268,6 +268,7 @@
                             <div>
                                 <span class="text-xs font-bold text-indigo-600 uppercase tracking-widest" id="question-level">Treino do Dia</span>
                                 <h2 class="text-lg font-bold text-slate-900" id="question-title">Carregando Questão...</h2>
+                                <p class="text-xs text-slate-400 mt-1" id="question-counter"></p>
                             </div>
                             <div class="flex items-center gap-1.5 bg-amber-50 text-amber-700 border border-amber-200 px-3 py-1 rounded-full text-xs font-semibold">
                                 <i data-lucide="zap" class="w-3.5 h-3.5 fill-amber-500"></i> +25 XP por acerto
@@ -305,9 +306,15 @@
                                 <!-- Resolução detalhada / Botão de Próxima -->
                                 <div class="mt-3 flex flex-col gap-2">
                                     <p class="text-[11px] leading-relaxed text-slate-600" id="feedback-explanation"></p>
-                                    <button onclick="nextQuestion()" class="mt-2 py-2.5 px-5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg text-xs font-bold self-start transition flex items-center gap-1.5 shadow-md">
-                                        Próximo Treino <i data-lucide="arrow-right" class="w-4 h-4"></i>
-                                    </button>
+                                    <div class="flex flex-wrap gap-2">
+                                        <button onclick="nextQuestion()" class="mt-2 py-2.5 px-5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg text-xs font-bold self-start transition flex items-center gap-1.5 shadow-md">
+                                            Próximo Treino <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                                        </button>
+                                        <!-- Botão Revisar no Laboratório (aparece em todos os feedbacks) -->
+                                        <button onclick="reviewInLab()" class="mt-2 py-2.5 px-5 bg-amber-600 hover:bg-amber-700 text-white rounded-lg text-xs font-bold self-start transition flex items-center gap-1.5 shadow-md">
+                                            <i data-lucide="flask-conical" class="w-4 h-4"></i> Revisar no Laboratório
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -369,16 +376,19 @@
         <p>© 2026 CurióMetrics - Desenvolvido para Autodesenvolvimento de Habilidades Matemáticas.</p>
     </footer>
 
-    <!-- Aplicação de Logica em JS -->
+    <!-- Aplicação de Lógica em JS -->
     <script>
         // Inicialização de Estado Global
         let xp = 0;
         let currentTab = 'sandbox';
         let currentLevel = 1;
         let selectedConfidence = null;
+        let currentQuestionIndex = 0; // Índice linear da questão atual
+        let totalQuestions = 10; // Total de questões no banco
 
-        // Banco de Questões Inteligentes Baseadas nos Treinos das Imagens
+        // Banco de Questões Inteligentes Expandido
         const questionBank = [
+            // Questão 1 (original)
             {
                 level: 1,
                 title: "Treino 1 (O Triângulo Perfeito)",
@@ -393,8 +403,10 @@
                 hint: "m = 6.4, n = 3.6, H = 4.8",
                 formula: "Hipotenusa a = √(8² + 6²) = 10. Curvas: b² = a · m => 64 = 10m => m = 6.4. c² = a · n => 36 = 10n => n = 3.6. Tezinho: H² = m · n => H = 4.8.",
                 explanation: "Exatamente! Primeiro descobrimos a hipotenusa toda aplicando Pitágoras (a = 10). Em seguida, aplicando o bizu das Curvas encontramos as projeções: b² = a·m (8² = 10·m => m = 6,4) e c² = a·n (6² = 10·n => n = 3,6). Por fim, pelo Tezinho de cabeça para baixo: H² = 6,4 × 3,6 = 23,04 => H = 4,8.",
-                labels: ["Catetos: 8 e 6", "Hipotenusa: 10", "Achar: m, n, H"]
+                labels: ["Catetos: 8 e 6", "Hipotenusa: 10", "Achar: m, n, H"],
+                triangleData: { b: 8, c: 6 } // Para o sandbox
             },
+            // Questão 2 (original)
             {
                 level: 2,
                 title: "Treino 2 (Pitágoras & Produtos Notáveis)",
@@ -409,8 +421,10 @@
                 hint: "Perímetro = 48 cm",
                 formula: "(x + 4)² = (x - 4)² + x² => x² - 16x = 0 => x = 16. Lados: 12, 16 e 20. Soma = 48.",
                 explanation: "Espetacular! Aplicando Pitágoras: (x + 4)² = x² + (x - 4)². Desenvolvendo os produtos notáveis: x² + 8x + 16 = x² + x² - 8x + 16. Simplificando tudo, temos x² - 16x = 0, logo x = 16. Substituindo os lados temos: 12, 16 e 20. O perímetro total é a soma: 12 + 16 + 20 = 48 cm.",
-                labels: ["Catetos: x e x-4", "Hipotenusa: x+4", "Achar: Perímetro"]
+                labels: ["Catetos: x e x-4", "Hipotenusa: x+4", "Achar: Perímetro"],
+                triangleData: { b: 12, c: 16 } // Após encontrar, b=12, c=16 (ou vice-versa)
             },
+            // Questão 3 (original)
             {
                 level: 3,
                 title: "Treino 3 (Desafio do Círculo Inscrito)",
@@ -425,11 +439,137 @@
                 hint: "Raio R = 7.5",
                 formula: "h² = m · n => 6² = 3 · (2R - 3) => 36 = 6R - 9 => R = 7.5.",
                 explanation: "Excelente! Como a hipotenusa é o diâmetro, ela mede 2R. Uma projeção mede 3, logo a outra projeção mede 2R - 3. Aplicando o Tezinho de ponta-cabeça: h² = m · n => 6² = 3 · (2R - 3) => 36 = 6R - 9 => 45 = 6R => R = 7,5.",
-                labels: ["Altura h = 6", "Projeção m = 3", "Achar: Raio R"]
+                labels: ["Altura h = 6", "Projeção m = 3", "Achar: Raio R"],
+                triangleData: { h: 6, m: 3, n: 12, a: 15, b: Math.sqrt(3*15), c: Math.sqrt(12*15) }
+            },
+            // Novas questões
+            {
+                level: 2,
+                title: "Treino 4 (Cabo de Aço)",
+                statement: "Um poste de 6 m de altura está escorado por um cabo de aço que vai do topo até um ponto no chão a 8 m do pé do poste. Calcule: (a) o comprimento do cabo; (b) a distância do pé do poste até o ponto onde a altura relativa ao cabo toca o cabo.",
+                options: [
+                    "Cabo = 10 m, distância = 3,6 m",
+                    "Cabo = 10 m, distância = 6,4 m",
+                    "Cabo = 14 m, distância = 4,8 m",
+                    "Cabo = 10 m, distância = 4,8 m"
+                ],
+                correct: 0,
+                hint: "Cabo = 10 m. A distância pedida é a projeção m do cateto 6 m sobre a hipotenusa 10 m: m = 6²/10 = 3,6 m.",
+                formula: "Hipotenusa a = √(6² + 8²) = 10. Projeção do cateto 6 m: m = b²/a = 36/10 = 3,6.",
+                explanation: "O triângulo formado tem catetos 6 m (poste) e 8 m (afastamento). A hipotenusa é o cabo, de 10 m. A altura relativa ao cabo parte do vértice do ângulo reto (pé do poste) e divide o cabo em duas projeções. O segmento do cabo que vai do pé do poste até o pé da altura mede a projeção do cateto de 6 m. Pela relação métrica b² = a · m, temos m = b² / a = 36 / 10 = 3,6 m. Portanto, a distância pedida é 3,6 m.",
+                labels: ["Catetos: 6 e 8", "Hipotenusa: 10", "Achar: projeção do cateto 6"],
+                triangleData: { b: 6, c: 8 }
+            },
+            {
+                level: 2,
+                title: "Treino 5 (Quadrado & Triângulo)",
+                statement: "Em um quadrado de lado 4 cm, traça-se uma diagonal e, a partir de um dos vértices opostos, uma perpendicular a essa diagonal. Determine o comprimento da perpendicular (altura) e os segmentos em que a diagonal fica dividida.",
+                options: [
+                    "h = 2√2 cm, m = 2√2 cm, n = 2√2 cm",
+                    "h = 2 cm, m = 2 cm, n = 2 cm",
+                    "h = 4 cm, m = 2 cm, n = 2 cm",
+                    "h = 2√2 cm, m = √2 cm, n = 3√2 cm"
+                ],
+                correct: 0,
+                hint: "A diagonal é a hipotenusa. A perpendicular é a altura relativa a ela. Todos os segmentos são iguais, pois o triângulo é isósceles.",
+                formula: "Diagonal = 4√2. Aplicando relações métricas: h = (produto dos catetos)/hipotenusa = 4·4/(4√2) = 4/√2 = 2√2. m = n = (cateto)²/hipotenusa = 16/(4√2) = 4/√2 = 2√2.",
+                explanation: "A diagonal do quadrado mede d = 4√2 cm. O triângulo retângulo formado é isósceles, com catetos iguais a 4 cm. A altura relativa à hipotenusa divide a diagonal em dois segmentos iguais (m = n) porque o triângulo é simétrico. Usando as relações: a·h = b·c ⇒ 4√2 · h = 4·4 ⇒ h = 16/(4√2) = 4/√2 = 2√2 cm. E b² = a·m ⇒ 16 = 4√2 · m ⇒ m = 16/(4√2) = 2√2 cm. Logo, m = n = 2√2 cm.",
+                labels: ["Lado do quadrado: 4", "Catetos: 4 e 4", "Hipotenusa: 4√2"],
+                triangleData: { b: 4, c: 4 }
+            },
+            {
+                level: 1,
+                title: "Treino 6 (Clássico 5-12-13)",
+                statement: "Em um triângulo retângulo de catetos 5 e 12, determine a altura relativa à hipotenusa e as projeções dos catetos sobre a hipotenusa.",
+                options: [
+                    "h ≈ 4,6; m ≈ 1,9; n ≈ 11,1",
+                    "h = 5; m = 2; n = 11",
+                    "h ≈ 4,6; m ≈ 2,4; n ≈ 10,6",
+                    "h ≈ 4,8; m ≈ 1,9; n ≈ 11,1"
+                ],
+                correct: 0,
+                hint: "Hipotenusa = 13. Use b² = a·m e c² = a·n, depois h² = m·n.",
+                formula: "a = 13. m = 5²/13 ≈ 1,923; n = 12²/13 ≈ 11,077; h = √(m·n) ≈ √(21,30) ≈ 4,615.",
+                explanation: "A hipotenusa é 13 (terno pitagórico 5-12-13). Projeção do cateto 5: m = 25/13 ≈ 1,923. Projeção do cateto 12: n = 144/13 ≈ 11,077. A altura h é a média geométrica das projeções: h = √(1,923 · 11,077) ≈ √21,30 ≈ 4,615. Portanto, h ≈ 4,6.",
+                labels: ["Catetos: 5 e 12", "Hipotenusa: 13", "Achar: h, m, n"],
+                triangleData: { b: 5, c: 12 }
+            },
+            {
+                level: 3,
+                title: "Treino 7 (Bambu Quebrado)",
+                statement: "Um bambu de 10 m de altura se quebra a uma certa distância do chão e sua ponta toca o solo a 3 m do pé. Determine a altura do ponto de quebra e o comprimento da parte tombada, que forma a hipotenusa do triângulo retângulo.",
+                options: [
+                    "Quebra a 4,55 m; parte caída 5,45 m",
+                    "Quebra a 4,0 m; parte caída 6,0 m",
+                    "Quebra a 4,55 m; parte caída 6,45 m",
+                    "Quebra a 3,5 m; parte caída 6,5 m"
+                ],
+                correct: 0,
+                hint: "Monte a equação: (10 - x)² = x² + 9, onde x é a altura da quebra.",
+                formula: "Seja x altura do ponto de quebra. A parte tombada é 10 - x (hipotenusa). Catetos: x e 3. Então (10 - x)² = x² + 3² → 100 -20x + x² = x² + 9 → -20x = -91 → x = 4,55 m. Hipotenusa = 10 - 4,55 = 5,45 m.",
+                explanation: "Um problema clássico! O bambu quebrado forma um triângulo retângulo onde a parte em pé (x) e a distância no solo (3 m) são catetos, e a parte caída é a hipotenusa (10 - x). Usando Pitágoras: (10 - x)² = x² + 3². Resolvendo, x = 4,55 m. Logo, a altura da quebra é 4,55 m e a parte caída mede 5,45 m.",
+                labels: ["Altura total: 10 m", "Afastamento: 3 m", "Achar: altura da quebra"],
+                triangleData: { b: 4.55, c: 3, a: 5.45 }
+            },
+            {
+                level: 3,
+                title: "Treino 8 (Corda & Diâmetro)",
+                statement: "Em uma circunferência de diâmetro AB = 10 cm, toma-se um ponto C sobre a circunferência tal que AC = 6 cm. Calcule a distância do ponto C à corda AB (altura do triângulo ABC) e as projeções dos catetos sobre a hipotenusa AB.",
+                options: [
+                    "h = 4,8 cm; m = 3,6 cm; n = 6,4 cm",
+                    "h = 4,0 cm; m = 2,0 cm; n = 8,0 cm",
+                    "h = 4,8 cm; m = 6,4 cm; n = 3,6 cm",
+                    "h = 3,6 cm; m = 4,8 cm; n = 5,2 cm"
+                ],
+                correct: 0,
+                hint: "AB é hipotenusa. O triângulo é retângulo em C. Cateto AC = 6, cateto BC = 8 (por Pitágoras). Use relações métricas.",
+                formula: "BC = √(10² - 6²) = 8. m (projeção de AC) = 6²/10 = 3,6; n (projeção de BC) = 8²/10 = 6,4; h = √(m·n) = 4,8.",
+                explanation: "AB é diâmetro, logo o ângulo C é reto. O triângulo retângulo tem hipotenusa 10 e um cateto 6; o outro cateto mede 8. Aplicando as relações métricas: a projeção de AC (6) sobre AB é m = 6²/10 = 3,6 cm; a projeção de BC (8) é n = 8²/10 = 6,4 cm. A altura relativa à hipotenusa é h = √(3,6·6,4) = √23,04 = 4,8 cm.",
+                labels: ["Diâmetro = 10", "Cateto AC = 6", "Achar: h, m, n"],
+                triangleData: { b: 6, c: 8, a: 10 }
+            },
+            {
+                level: 2,
+                title: "Treino 9 (Escada na Janela)",
+                statement: "Uma escada de 13 m está apoiada no topo de um muro vertical e sua base está a 5 m do muro. Qual é a altura do muro? Em que ponto da escada deve ser fixado um apoio horizontal (paralelo ao chão) que divida a escada em dois segmentos de modo que a distância desse apoio ao topo seja o dobro da distância à base?",
+                options: [
+                    "Altura = 12 m; ponto a 4 m da base e 8 m do topo",
+                    "Altura = 12 m; ponto a 5 m da base e 8 m do topo",
+                    "Altura = 10 m; ponto a 3 m da base e 10 m do topo",
+                    "Altura = 12 m; ponto a 4,33 m da base e 8,67 m do topo"
+                ],
+                correct: 3,
+                hint: "Altura = 12 m. Use semelhança de triângulos para a divisão proporcional da escada.",
+                formula: "Altura h = √(13² - 5²) = 12. A escada é a hipotenusa. O apoio horizontal cria segmentos proporcionais às projeções. Se a distância ao topo é o dobro da distância à base, e a escada inteira é 13, temos x + 2x = 13 → x = 13/3 ≈ 4,33 m (da base) e 8,67 m (do topo).",
+                explanation: "Pitágoras: altura do muro = √(13² - 5²) = 12 m. Agora, imagine um apoio horizontal que toca a escada em um ponto e o muro. Esse apoio é paralelo ao chão, então os triângulos formados são semelhantes ao original. A divisão da escada em dois segmentos (base ao apoio e apoio ao topo) é proporcional às projeções dos catetos. Como o segmento superior deve ser o dobro do inferior, e a soma é 13 m, temos segmentos de 13/3 ≈ 4,33 m e 26/3 ≈ 8,67 m.",
+                labels: ["Hipotenusa: 13", "Base: 5 m", "Divisão: 1:2"],
+                triangleData: { b: 12, c: 5, a: 13 }
+            },
+            {
+                level: 3,
+                title: "Treino 10 (Isósceles Reto)",
+                statement: "Em um triângulo retângulo isósceles, a altura relativa à hipotenusa mede 2 cm. Determine a medida dos catetos e a hipotenusa.",
+                options: [
+                    "Catetos = 2√2 cm, hipotenusa = 4 cm",
+                    "Catetos = 4 cm, hipotenusa = 4√2 cm",
+                    "Catetos = 2 cm, hipotenusa = 2√2 cm",
+                    "Catetos = √8 cm, hipotenusa = 4 cm"
+                ],
+                correct: 0,
+                hint: "Num triângulo retângulo isósceles, a altura relativa à hipotenusa é metade da hipotenusa.",
+                formula: "h = a/2 → 2 = a/2 → a = 4. Catetos: b = c = a/√2 = 4/√2 = 2√2.",
+                explanation: "Em qualquer triângulo retângulo isósceles, a altura relativa à hipotenusa coincide com a mediana e vale metade da hipotenusa. Logo, se h = 2 cm, então a = 4 cm. Pela relação pitagórica, os catetos iguais medem a/√2 = 4/√2 = 2√2 cm.",
+                labels: ["h = 2 cm", "Triângulo isósceles", "Achar: catetos, hipotenusa"],
+                triangleData: { b: 2*Math.SQRT2, c: 2*Math.SQRT2, a: 4 } // Math.SQRT2 pode não ser definido, trataremos depois
             }
         ];
 
-        let currentQuestionIndex = 0;
+        // Corrige valor sqrt(2) para questão 10
+        questionBank[9].triangleData.b = 2 * Math.sqrt(2);
+        questionBank[9].triangleData.c = 2 * Math.sqrt(2);
+        questionBank[9].triangleData.a = 4;
+
+        totalQuestions = questionBank.length;
 
         // Atualizador de Valores do Triângulo Dinâmico (Sandbox)
         const slider = document.getElementById('triangle-slider');
@@ -538,11 +678,36 @@
             }
         }
 
+        // Função para ajustar sandbox com base nos dados da questão atual
+        function applyQuestionDataToSandbox() {
+            const q = questionBank[currentQuestionIndex];
+            if (q.triangleData && q.triangleData.b && q.triangleData.c) {
+                const b = q.triangleData.b;
+                const c = q.triangleData.c;
+                // Evitar divisão por zero
+                if (c === 0) return;
+                const R = (b / c) ** 2;
+                const sliderRatio = R / (1 + R);
+                let sliderVal = Math.round(sliderRatio * 100);
+                // Limitar ao intervalo do slider
+                sliderVal = Math.max(15, Math.min(85, sliderVal));
+                slider.value = sliderVal;
+                updateTriangle(sliderVal);
+            }
+        }
+
+        // Função acionada pelo botão "Revisar no Laboratório"
+        function reviewInLab() {
+            switchTab('sandbox');
+            applyQuestionDataToSandbox();
+        }
+
         // Lógica de Autodesenvolvimento e Quiz
         function loadQuestion() {
             const q = questionBank[currentQuestionIndex];
             document.getElementById('question-level').textContent = q.title;
             document.getElementById('question-title').textContent = "Bizu do Curió em Ação";
+            document.getElementById('question-counter').textContent = `Questão ${currentQuestionIndex + 1} de ${totalQuestions}`;
             document.getElementById('question-statement').textContent = q.statement;
             
             document.getElementById('q-val-1').textContent = `Dados do Problema: ${q.labels[0]}`;
@@ -597,13 +762,13 @@
                 feedbackIcon.setAttribute('data-lucide', 'alert-circle');
                 feedbackTitle.textContent = "Houve um detalhe na conta!";
                 feedbackText.textContent = "Mas errar é parte crucial do aprendizado ativo! Veja a dica abaixo.";
-                feedbackExplanation.innerHTML = `<strong>Dica do Professor:</strong> ${q.hint}.<br>Pressione avançar para reiniciar ou tente simular proporções semelhantes com os controles na aba anterior.`;
+                feedbackExplanation.innerHTML = `<strong>Dica do Professor:</strong> ${q.hint}.<br>Pressione avançar para reiniciar ou use o botão "Revisar no Laboratório" para visualizar as proporções.`;
             }
             lucide.createIcons();
         }
 
         function nextQuestion() {
-            currentQuestionIndex = (currentQuestionIndex + 1) % questionBank.length;
+            currentQuestionIndex = (currentQuestionIndex + 1) % totalQuestions;
             loadQuestion();
         }
 
